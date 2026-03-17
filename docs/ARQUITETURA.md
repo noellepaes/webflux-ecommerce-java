@@ -198,9 +198,8 @@ Retorna HTTP 400 com mensagem
 payment/
  ├── domain/
  │     ├── model/
- │     │     ├── Payment.java          ← Regras: approve(), fail()
+ │     │     ├── Payment.java          ← Entidade simples (sem regra, por enquanto)
  │     │     ├── PaymentStatus.java
- │     │     └── Money.java
  │     ├── repository/
  │     │     └── (Etapa 1) sem interface de repositório
  │     └── exception/
@@ -208,7 +207,7 @@ payment/
  │
  ├── application/
  │     ├── usecase/
- │     │     ├── ProcessPaymentUseCase.java ← Orquestra + (Etapa 1) processa direto
+ │     │     ├── ProcessPaymentUseCase.java ← (Etapa 1) regra + processamento no use case
  │     │     └── GetPaymentUseCase.java
  │     └── dto/
  │           └── PaymentDTO.java ← DTO interno

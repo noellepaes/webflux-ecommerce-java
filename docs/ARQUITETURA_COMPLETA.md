@@ -416,9 +416,10 @@ order/
 ### Etapa 1 — simples (recomendado pra você agora)
 - **Processamento direto** no `ProcessPaymentUseCase` (sem adapter)
 - **Persistência** via `JpaPaymentRepository` (Spring Data JPA)
-- **Regras** continuam no domínio (`Payment.approve()` / `Payment.fail()`)
+- **Regras** no próprio use case (entidade simples/anêmica)
 
 ### Etapa 2 — quando começar a crescer
+- Mover regras para o domínio (ex: `Payment.approve()` / `Payment.fail()`)
 - Extrair um adapter leve:
   - `PaymentProcessor` (interface no domínio)
   - `StripePaymentProcessor` / `PayPalPaymentProcessor` (implementações na infra)

@@ -4,6 +4,7 @@ import com.ecommerce.payment.domain.model.Payment;
 import com.ecommerce.payment.domain.model.PaymentMethod;
 import com.ecommerce.payment.domain.model.PaymentStatus;
 import com.ecommerce.payment.infrastructure.repository.JpaPaymentRepository;
+import com.ecommerce.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,19 +39,23 @@ public class ProcessPaymentUseCase {
     private void processDirectly(Payment payment) {
         log.info("Processando pagamento {} (modo simples, sem adapter)", payment.getId());
 
+        if (payment.getStatus() != PaymentStatus.PENDING) {
+            throw new BusinessException("Pagamento já processado");
+        }
+
         // Simulação bem simples: aprova pagamentos com valor > 0, senão falha.
         // Se amanhã você integrar Stripe/PayPal de verdade, esse trecho vira um adapter.
         boolean success = payment.getAmount() != null && payment.getAmount().compareTo(BigDecimal.ZERO) > 0;
 
         if (success) {
-            payment.approve(); // regra continua no domínio
+            payment.setStatus(PaymentStatus.APPROVED);
         } else {
-            payment.fail();
+            payment.setStatus(PaymentStatus.FAILED);
         }
 
         // Só pra deixar explícito: após processar, o status não deve ficar PENDING
         if (payment.getStatus() == PaymentStatus.PENDING) {
-            payment.fail();
+            payment.setStatus(PaymentStatus.FAILED);
         }
     }
 }

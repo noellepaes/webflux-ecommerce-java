@@ -1,6 +1,5 @@
 package com.ecommerce.payment.domain.model;
 
-import com.ecommerce.payment.domain.exception.PaymentFailedException;
 import com.ecommerce.shared.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,24 +31,4 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentMethod method;
-    
-    // Regras de negócio no domínio
-    public void approve() {
-        if (this.status != PaymentStatus.PENDING) {
-            throw new PaymentFailedException("Pagamento já processado");
-        }
-        this.status = PaymentStatus.APPROVED;
-    }
-    
-    public void fail() {
-        this.status = PaymentStatus.FAILED;
-    }
-    
-    public boolean isApproved() {
-        return status == PaymentStatus.APPROVED;
-    }
-    
-    public boolean isPending() {
-        return status == PaymentStatus.PENDING;
-    }
 }
