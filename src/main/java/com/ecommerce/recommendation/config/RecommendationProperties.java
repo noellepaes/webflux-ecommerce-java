@@ -1,24 +1,27 @@
 package com.ecommerce.recommendation.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 
-@Getter
-@Setter
-@ConfigurationProperties(prefix = "app.recommendation")
-public class RecommendationProperties {
+@Validated
+@ConfigurationProperties(prefix = "app.recommendation", ignoreUnknownFields = false)
+public record RecommendationProperties(
 
-    /**
-     * Tempo até a chave Redis do histórico de escolhas do cliente expirar.
-     * A cada nova escolha o TTL é renovado para este valor (janela deslizante).
-     */
-    private Duration customerHistoryTtl = Duration.ofDays(30);
+        /**
+         * Tempo até a chave Redis do histórico expirar.
+         * A cada nova visualização o TTL é renovado (janela deslizante).
+         * Obrigatório em application.yml — sem default na classe.
+         */
+        @NotNull Duration customerHistoryTtl,
 
-    /**
-     * Quantidade máxima de produtos sugeridos por resposta.
-     */
-    private int suggestionLimit = 5;
+        /**
+         * Quantidade máxima de produtos sugeridos por resposta.
+         * Obrigatório em application.yml — sem default na classe.
+         */
+        @Positive int suggestionLimit
+) {
 }

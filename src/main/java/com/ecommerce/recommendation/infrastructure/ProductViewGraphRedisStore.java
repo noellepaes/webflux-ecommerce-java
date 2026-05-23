@@ -36,7 +36,7 @@ public class ProductViewGraphRedisStore {
         redisTemplate.opsForSet().add(userKey, productId.toString());
         redisTemplate.opsForSet().add(productKey, customerId.toString());
 
-        Duration ttl = recommendationProperties.getCustomerHistoryTtl();
+        Duration ttl = recommendationProperties.customerHistoryTtl();
         redisTemplate.expire(userKey, ttl);
         redisTemplate.expire(productKey, ttl);
     }

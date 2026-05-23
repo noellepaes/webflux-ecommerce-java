@@ -33,7 +33,7 @@ public class GetPurchaseRecommendationsUseCase {
      */
     public List<ProductDTO> execute(UUID customerId) {
         Set<UUID> userViews = viewGraphStore.getUserViewedProductIds(customerId);
-        int limit = recommendationProperties.getSuggestionLimit();
+        int limit = recommendationProperties.suggestionLimit();
 
         Map<UUID, Integer> scores = collaborativeScores(customerId, userViews);
         List<UUID> rankedCandidateIds = scores.entrySet().stream()

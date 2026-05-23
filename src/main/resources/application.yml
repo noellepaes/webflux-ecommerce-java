@@ -35,7 +35,7 @@ spring:
       host: localhost
       port: 6379
 
-# TTL do histórico de produtos escolhidos no Redis (após esse período a chave expira e os dados somem)
+# Recomendações (Redis) — valores obrigatórios; a app não sobe se faltar algum
 app:
   recommendation:
     customer-history-ttl: 30d

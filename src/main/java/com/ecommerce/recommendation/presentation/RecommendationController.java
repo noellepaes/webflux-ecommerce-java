@@ -49,14 +49,4 @@ public class RecommendationController {
         viewGraphStore.recordView(customerId, request.productId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-    @PostMapping("/customers/{customerId}/choices")
-    @Operation(summary = "Registrar escolha (legado)", description = "Mesmo efeito de POST .../views — mantido para compatibilidade")
-    @ApiResponse(responseCode = "204", description = "Registrado")
-    public ResponseEntity<Void> recordChoice(
-            @Parameter(description = "ID do cliente", required = true) @PathVariable UUID customerId,
-            @Valid @RequestBody RecordProductViewRequest request) {
-        viewGraphStore.recordView(customerId, request.productId());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 }
