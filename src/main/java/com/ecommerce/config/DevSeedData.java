@@ -1,5 +1,6 @@
 package com.ecommerce.config;
 
+import com.ecommerce.auth.application.usecase.RegisterUserUseCase;
 import com.ecommerce.customer.application.dto.CustomerDTO;
 import com.ecommerce.customer.application.usecase.CreateCustomerUseCase;
 import com.ecommerce.customer.domain.model.Customer;
@@ -32,6 +33,7 @@ public class DevSeedData implements CommandLineRunner {
     private static final String LEBRON_EMAIL = "lebron.seed@dev.local";
     private static final String NOELLE_EMAIL = "noelle.seed@dev.local";
     private static final String DANIEL_EMAIL = "daniel.seed@dev.local";
+    private static final String DEV_PASSWORD = "123456";
 
     private static final String TENIS_NAME = "Tênis Nike Air Max";
     private static final String BOLA_NAME = "Bola de Basquete Spalding";
@@ -46,12 +48,14 @@ public class DevSeedData implements CommandLineRunner {
     private final CreateCustomerUseCase createCustomerUseCase;
     private final CreateProductUseCase createProductUseCase;
     private final ProductViewGraphRedisStore viewGraphStore;
+    private final RegisterUserUseCase registerUserUseCase;
 
     @Override
     public void run(String... args) {
         try {
             if (customerRepository.findByEmail(LEBRON_EMAIL).isPresent()) {
                 log.info("Seed DEV já existe no banco — sincronizando views no Redis (POST /views)...");
+                seedUsers();
                 seedRedisViews(loadExistingSeedEntities());
                 return;
             }
@@ -102,6 +106,8 @@ public class DevSeedData implements CommandLineRunner {
                     tenis, bola, camisa,
                     notebook, mouse, teclado, headset
             ));
+
+            seedUsers();
 
             log.info("Seed DEV concluída. Swagger: http://localhost:8080/swagger-ui.html");
 
@@ -158,6 +164,14 @@ public class DevSeedData implements CommandLineRunner {
         log.info("Sugestões LeBron: GET /api/recommendations/customers/{}", seed.lebron().id());
         log.info("Noelle — registre views manual: POST /api/recommendations/customers/{}/views", seed.noelle().id());
         log.info("Sugestões Daniel: GET /api/recommendations/customers/{}", seed.daniel().id());
+    }
+
+    private void seedUsers() {
+        registerUserUseCase.execute(LEBRON_EMAIL, DEV_PASSWORD);
+        registerUserUseCase.execute(NOELLE_EMAIL, DEV_PASSWORD);
+        registerUserUseCase.execute(DANIEL_EMAIL, DEV_PASSWORD);
+        log.info("Usuários DEV (senha '{}'): {}, {}, {}",
+                DEV_PASSWORD, LEBRON_EMAIL, NOELLE_EMAIL, DANIEL_EMAIL);
     }
 
     private void recordView(CustomerDTO customer, ProductDTO product, String context) {
