@@ -45,6 +45,24 @@ services:
     container_name: ecommerce-redis
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-network
+
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: ecommerce-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus-rules.yml:/etc/prometheus/prometheus-rules.yml:ro
+    depends_on:
+      - app
     networks:
       - ecommerce-network
 

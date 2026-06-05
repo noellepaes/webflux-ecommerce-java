@@ -41,6 +41,44 @@ app:
     customer-history-ttl: 30d
     suggestion-limit: 5
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics,info
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+    prometheus:
+      enabled: true
+  metrics:
+    probe-interval-ms: 30000
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[app.postgres.ping]": true
+        "[app.redis.ping]": true
+      percentiles:
+        "[app.postgres.ping]": 0.95, 0.99
+        "[app.redis.ping]": 0.95, 0.99
+      minimum-expected-value:
+        "[app.postgres.ping]": 1ms
+        "[app.redis.ping]": 0.5ms
+      maximum-expected-value:
+        "[app.postgres.ping]": 2s
+        "[app.redis.ping]": 500ms
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  health:
+    db:
+      enabled: true
+    redis:
+      enabled: true
+
 # SpringDoc OpenAPI (Swagger) Configuration
 springdoc:
   api-docs:
