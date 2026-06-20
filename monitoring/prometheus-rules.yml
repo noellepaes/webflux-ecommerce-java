@@ -1,0 +1,14 @@
+# Regras de gravação: p95/p99 a partir dos buckets do histograma clássico.
+# No Prometheus UI: Status → Rules, ou consulte app:postgres_ping:p95
+groups:
+  - name: ecommerce_infrastructure
+    interval: 30s
+    rules:
+      - record: app:postgres_ping:p95
+        expr: histogram_quantile(0.95, sum(rate(app_postgres_ping_seconds_bucket[5m])) by (le))
+      - record: app:postgres_ping:p99
+        expr: histogram_quantile(0.99, sum(rate(app_postgres_ping_seconds_bucket[5m])) by (le))
+      - record: app:redis_ping:p95
+        expr: histogram_quantile(0.95, sum(rate(app_redis_ping_seconds_bucket[5m])) by (le))
+      - record: app:redis_ping:p99
+        expr: histogram_quantile(0.99, sum(rate(app_redis_ping_seconds_bucket[5m])) by (le))

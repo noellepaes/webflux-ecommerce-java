@@ -65,7 +65,7 @@ management:
         "[app.redis.ping]": 0.95, 0.99
       minimum-expected-value:
         "[app.postgres.ping]": 1ms
-        "[app.redis.ping]": 0.5ms
+        "[app.redis.ping]": 1ms
       maximum-expected-value:
         "[app.postgres.ping]": 2s
         "[app.redis.ping]": 500ms
