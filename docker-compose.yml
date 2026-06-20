@@ -66,9 +66,29 @@ services:
     networks:
       - ecommerce-network
 
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: ecommerce-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_DISABLE_INITIAL_ADMIN_PASSWORD_CHANGE: "true"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - ecommerce-network
+
 networks:
   ecommerce-network:
     driver: bridge
 
 volumes:
   postgres_data:
+  grafana_data:
