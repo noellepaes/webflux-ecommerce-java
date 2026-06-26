@@ -215,6 +215,38 @@
           "legendFormat": "heap used",
           "refId": "A"
         }
+      ],
+      "links": [
+        {
+          "title": "Abrir dashboard JVM/GC",
+          "url": "/d/ecommerce-jvm-gc/ecommerce-jvm-e-garbage-collector",
+          "targetBlank": false
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": { "drawStyle": "bars", "fillOpacity": 70, "lineWidth": 1 }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 20 },
+      "id": 9,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "GC — quando foi executado (eventos/s)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "app:jvm_gc:events_per_second",
+          "legendFormat": "{{gc}} — {{cause}}",
+          "refId": "A"
+        }
       ]
     }
   ],

@@ -12,3 +12,68 @@ groups:
         expr: histogram_quantile(0.95, sum(rate(app_redis_ping_seconds_bucket[5m])) by (le))
       - record: app:redis_ping:p99
         expr: histogram_quantile(0.99, sum(rate(app_redis_ping_seconds_bucket[5m])) by (le))
+
+  - name: ecommerce_jvm_gc
+    interval: 15s
+    rules:
+      - record: app:jvm_gc:events_per_second
+        expr: sum by (gc, action, cause) (rate(jvm_gc_pause_seconds_count[5m]))
+      - record: app:jvm_gc:avg_pause_seconds
+        expr: |
+          sum(rate(jvm_gc_pause_seconds_sum[5m]))
+          /
+          sum(rate(jvm_gc_pause_seconds_count[5m]))
+      - record: app:jvm_gc:total_pauses
+        expr: sum(jvm_gc_pause_seconds_count)
+      - record: app:jvm_gc:overhead_ratio
+        expr: jvm_gc_overhead_percent
+      - record: app:jvm_gc:heap_used_after_gc_ratio
+        expr: jvm_memory_usage_after_gc_percent{area="heap",pool="long-lived"}
+      - record: app:jvm_gc:memory_allocated_rate_bytes
+        expr: rate(jvm_gc_memory_allocated_bytes_total[5m])
+      - record: app:jvm_gc:memory_promoted_rate_bytes
+        expr: rate(jvm_gc_memory_promoted_bytes_total[5m])
+
+  - name: ecommerce_jvm_threads
+    interval: 15s
+    rules:
+      - record: app:jvm_threads:live
+        expr: jvm_threads_live_threads
+      - record: app:jvm_threads:peak
+        expr: jvm_threads_peak_threads
+      - record: app:jvm_threads:daemon
+        expr: jvm_threads_daemon_threads
+      - record: app:tomcat_threads:busy
+        expr: tomcat_threads_busy_threads
+      - record: app:tomcat_threads:current
+        expr: tomcat_threads_current_threads
+      - record: app:tomcat_threads:max
+        expr: tomcat_threads_config_max_threads
+      - record: app:tomcat_threads:utilization_ratio
+        expr: |
+          tomcat_threads_busy_threads
+          /
+          clamp_min(tomcat_threads_config_max_threads, 1)
+
+  - name: ecommerce_http
+    interval: 15s
+    rules:
+      - record: app:http:request_rate_by_uri
+        expr: sum by (uri, method, status) (rate(http_server_requests_seconds_count[1m]))
+      - record: app:http:latency_avg_seconds
+        expr: |
+          sum by (uri, method) (rate(http_server_requests_seconds_sum[1m]))
+          /
+          sum by (uri, method) (rate(http_server_requests_seconds_count[1m]))
+      - record: app:http:latency_p95_seconds
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le, uri, method) (rate(http_server_requests_seconds_bucket[1m]))
+          )
+      - record: app:http:latency_p99_seconds
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum by (le, uri, method) (rate(http_server_requests_seconds_bucket[1m]))
+          )

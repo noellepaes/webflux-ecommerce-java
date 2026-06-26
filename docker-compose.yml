@@ -85,6 +85,18 @@ services:
     networks:
       - ecommerce-network
 
+  k6:
+    image: grafana/k6:0.54.0
+    profiles: ["load-test"]
+    volumes:
+      - ./load-tests/k6:/scripts:ro
+    environment:
+      BASE_URL: http://app:8080
+    depends_on:
+      - app
+    networks:
+      - ecommerce-network
+
 networks:
   ecommerce-network:
     driver: bridge

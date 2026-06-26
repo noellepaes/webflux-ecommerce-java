@@ -41,6 +41,11 @@ app:
     customer-history-ttl: 30d
     suggestion-limit: 5
 
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 management:
   endpoints:
     web:
@@ -54,15 +59,23 @@ management:
       enabled: true
   metrics:
     probe-interval-ms: 30000
+    enable:
+      jvm: true
+      tomcat: true
+      process: true
     tags:
       application: ${spring.application.name}
     distribution:
       percentiles-histogram:
         "[app.postgres.ping]": true
         "[app.redis.ping]": true
+        "[jvm.gc.pause]": true
+        "[http.server.requests]": true
       percentiles:
         "[app.postgres.ping]": 0.95, 0.99
         "[app.redis.ping]": 0.95, 0.99
+        "[jvm.gc.pause]": 0.95, 0.99
+        "[http.server.requests]": 0.5, 0.95, 0.99
       minimum-expected-value:
         "[app.postgres.ping]": 1ms
         "[app.redis.ping]": 1ms
