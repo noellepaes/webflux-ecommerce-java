@@ -222,6 +222,84 @@
           "refId": "A"
         }
       ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 36 },
+      "id": 103,
+      "title": "Comparativo por endpoint (use após cada teste da suite)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "align": "auto", "displayMode": "auto", "inspect": false }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Value" },
+            "properties": [
+              { "id": "displayName", "value": "p95 (s)" },
+              { "id": "decimals", "value": 4 }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 37 },
+      "id": 9,
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "p95 (s)" }]
+      },
+      "title": "Ranking — latência p95 por URI",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "topk(20, app:http:latency_p95_seconds{uri!~\"/actuator.*\"})",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        { "id": "organize", "options": { "excludeByName": { "Time": true, "__name__": true, "application": true, "instance": true, "job": true }, "renameByName": { "method": "Método", "uri": "Endpoint" } } }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "align": "auto", "displayMode": "auto" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Value" },
+            "properties": [{ "id": "displayName", "value": "req/s" }]
+          }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 37 },
+      "id": 10,
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "req/s" }]
+      },
+      "title": "Ranking — requisições/s por URI",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "topk(20, sum by (uri, method) (app:http:request_rate_by_uri{uri!~\"/actuator.*\"}))",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        { "id": "organize", "options": { "excludeByName": { "Time": true, "__name__": true, "application": true, "instance": true, "job": true, "status": true }, "renameByName": { "method": "Método", "uri": "Endpoint" } } }
+      ]
     }
   ],
   "refresh": "5s",
