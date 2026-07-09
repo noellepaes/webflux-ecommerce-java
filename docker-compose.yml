@@ -77,7 +77,6 @@ services:
       GF_SECURITY_DISABLE_INITIAL_ADMIN_PASSWORD_CHANGE: "true"
       GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
-      - grafana_data:/var/lib/grafana
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on:
@@ -103,4 +102,3 @@ networks:
 
 volumes:
   postgres_data:
-  grafana_data:
