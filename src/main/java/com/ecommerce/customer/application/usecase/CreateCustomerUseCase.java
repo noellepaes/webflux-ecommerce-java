@@ -7,28 +7,33 @@ import com.ecommerce.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class CreateCustomerUseCase {
-    
+
     private final CustomerRepository repository;
-    
+
     @Transactional
-    public CustomerDTO execute(CustomerDTO customerDTO) {
-        if (repository.findByEmail(customerDTO.email()).isPresent()) {
-            throw new BusinessException("Cliente com este email já existe");
-        }
-        if (repository.findByCpf(customerDTO.cpf()).isPresent()) {
-            throw new BusinessException("Cliente com este CPF já existe");
-        }
-        
-        Customer customer = new Customer();
-        customer.setName(customerDTO.name());
-        customer.setEmail(customerDTO.email());
-        customer.setCpf(customerDTO.cpf());
-        
-        customer = repository.save(customer);
-        return CustomerDTO.from(customer);
+    public Mono<CustomerDTO> execute(CustomerDTO customerDTO) {
+        return repository.findByEmail(customerDTO.email()).hasElement()
+                .flatMap(emailExists -> {
+                    if (emailExists) {
+                        return Mono.error(new BusinessException("Cliente com este email já existe"));
+                    }
+                    return repository.findByCpf(customerDTO.cpf()).hasElement();
+                })
+                .flatMap(cpfExists -> {
+                    if (Boolean.TRUE.equals(cpfExists)) {
+                        return Mono.error(new BusinessException("Cliente com este CPF já existe"));
+                    }
+                    Customer customer = new Customer();
+                    customer.setName(customerDTO.name());
+                    customer.setEmail(customerDTO.email());
+                    customer.setCpf(customerDTO.cpf());
+                    return repository.save(customer);
+                })
+                .map(CustomerDTO::from);
     }
 }

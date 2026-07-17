@@ -1,14 +1,14 @@
 package com.ecommerce.order.domain.repository;
 
 import com.ecommerce.order.domain.model.Order;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderRepository {
-    Order save(Order order);
-    Optional<Order> findById(UUID id);
-    List<Order> findByCustomerId(UUID customerId);
-    List<Order> findAll();
+    Mono<Order> save(Order order);
+    Mono<Order> findById(UUID id);
+    Flux<Order> findByCustomerId(UUID customerId);
+    Flux<Order> findAll();
 }

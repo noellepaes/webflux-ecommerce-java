@@ -1,0 +1,2070 @@
+
+=== Auth | Postgres | POST /api/auth/login ===
+docker :  Container ecommerce-postgres Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-postgres Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-app Running 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-29c7f252cb7c Creating 
+ Container kafka-microsservices-java-k6-run-29c7f252cb7c Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/auth-login.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 0 complete and 0 interrupted iterations
+default   [   3% ] 50 VUs  01.0s/30s
+
+running (0m02.0s), 50/50 VUs, 14 complete and 0 interrupted iterations
+default   [   7% ] 50 VUs  02.0s/30s
+
+running (0m03.0s), 50/50 VUs, 22 complete and 0 interrupted iterations
+default   [  10% ] 50 VUs  03.0s/30s
+
+running (0m04.0s), 50/50 VUs, 33 complete and 0 interrupted iterations
+default   [  13% ] 50 VUs  04.0s/30s
+
+running (0m05.0s), 50/50 VUs, 43 complete and 0 interrupted iterations
+default   [  17% ] 50 VUs  05.0s/30s
+
+running (0m06.0s), 50/50 VUs, 59 complete and 0 interrupted iterations
+default   [  20% ] 50 VUs  06.0s/30s
+
+running (0m07.0s), 50/50 VUs, 74 complete and 0 interrupted iterations
+default   [  23% ] 50 VUs  07.0s/30s
+
+running (0m08.0s), 50/50 VUs, 84 complete and 0 interrupted iterations
+default   [  27% ] 50 VUs  08.0s/30s
+
+running (0m09.0s), 50/50 VUs, 103 complete and 0 interrupted iterations
+default   [  30% ] 50 VUs  09.0s/30s
+
+running (0m10.0s), 50/50 VUs, 127 complete and 0 interrupted iterations
+default   [  33% ] 50 VUs  10.0s/30s
+
+running (0m11.0s), 50/50 VUs, 147 complete and 0 interrupted iterations
+default   [  37% ] 50 VUs  11.0s/30s
+
+running (0m12.0s), 50/50 VUs, 164 complete and 0 interrupted iterations
+default   [  40% ] 50 VUs  12.0s/30s
+
+running (0m13.0s), 50/50 VUs, 176 complete and 0 interrupted iterations
+default   [  43% ] 50 VUs  13.0s/30s
+
+running (0m14.0s), 50/50 VUs, 192 complete and 0 interrupted iterations
+default   [  47% ] 50 VUs  14.0s/30s
+
+running (0m15.0s), 50/50 VUs, 206 complete and 0 interrupted iterations
+default   [  50% ] 50 VUs  15.0s/30s
+
+running (0m16.0s), 50/50 VUs, 227 complete and 0 interrupted iterations
+default   [  53% ] 50 VUs  16.0s/30s
+
+running (0m17.0s), 50/50 VUs, 244 complete and 0 interrupted iterations
+default   [  57% ] 50 VUs  17.0s/30s
+
+running (0m18.0s), 50/50 VUs, 258 complete and 0 interrupted iterations
+default   [  60% ] 50 VUs  18.0s/30s
+
+running (0m19.0s), 50/50 VUs, 278 complete and 0 interrupted iterations
+default   [  63% ] 50 VUs  19.0s/30s
+
+running (0m20.0s), 50/50 VUs, 304 complete and 0 interrupted iterations
+default   [  67% ] 50 VUs  20.0s/30s
+
+running (0m21.0s), 50/50 VUs, 333 complete and 0 interrupted iterations
+default   [  70% ] 50 VUs  21.0s/30s
+
+running (0m22.0s), 50/50 VUs, 350 complete and 0 interrupted iterations
+default   [  73% ] 50 VUs  22.0s/30s
+
+running (0m23.0s), 50/50 VUs, 364 complete and 0 interrupted iterations
+default   [  77% ] 50 VUs  23.0s/30s
+
+running (0m24.0s), 50/50 VUs, 382 complete and 0 interrupted iterations
+default   [  80% ] 50 VUs  24.0s/30s
+
+running (0m25.0s), 50/50 VUs, 403 complete and 0 interrupted iterations
+default   [  83% ] 50 VUs  25.0s/30s
+
+running (0m26.0s), 50/50 VUs, 426 complete and 0 interrupted iterations
+default   [  87% ] 50 VUs  26.0s/30s
+
+running (0m27.0s), 50/50 VUs, 443 complete and 0 interrupted iterations
+default   [  90% ] 50 VUs  27.0s/30s
+
+running (0m28.0s), 50/50 VUs, 459 complete and 0 interrupted iterations
+default   [  93% ] 50 VUs  28.0s/30s
+
+running (0m29.0s), 50/50 VUs, 483 complete and 0 interrupted iterations
+default   [  97% ] 50 VUs  29.0s/30s
+
+running (0m30.0s), 50/50 VUs, 505 complete and 0 interrupted iterations
+default   [ 100% ] 50 VUs  30.0s/30s
+
+running (0m31.0s), 25/50 VUs, 531 complete and 0 interrupted iterations
+default Ôåô [ 100% ] 50 VUs  30s
+
+running (0m32.0s), 06/50 VUs, 550 complete and 0 interrupted iterations
+default Ôåô [ 100% ] 50 VUs  30s
+
+     Ô£ô login 200
+
+     checks.........................: 100.00% 556 out of 556
+     data_received..................: 175 kB  5.4 kB/s
+     data_sent......................: 108 kB  3.3 kB/s
+     http_req_blocked...............: avg=1.25ms   min=6.7-Ás    med=13.2-Ás  max=44.51ms p(90)=93.41-Ás  p(95)=8.71ms 
+     http_req_connecting............: avg=388.08-Ás min=0s       med=0s      max=24.98ms p(90)=0s       p(95)=1.29ms 
+     http_req_duration..............: avg=2.68s    min=289.48ms med=2.59s   max=7.06s   p(90)=3.79s    p(95)=4.41s  
+     Ô£ù { endpoint:login }...........: avg=2.68s    min=289.48ms med=2.59s   max=7.06s   p(90)=3.79s    p(95)=4.41s  
+       { expected_response:true }...: avg=2.68s    min=289.48ms med=2.59s   max=7.06s   p(90)=3.79s    p(95)=4.41s  
+   Ô£ô http_req_failed................: 0.00%   0 out of 556
+     http_req_receiving.............: avg=5.38ms   min=72.7-Ás   med=1.96ms  max=55.13ms p(90)=13.81ms  p(95)=17.54ms
+     http_req_sending...............: avg=936.65-Ás min=27.7-Ás   med=65.92-Ás max=32.82ms p(90)=276.62-Ás p(95)=5.82ms 
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s      max=0s      p(90)=0s       p(95)=0s     
+     http_req_waiting...............: avg=2.68s    min=287.57ms med=2.59s   max=7.05s   p(90)=3.77s    p(95)=4.4s   
+     http_reqs......................: 556     17.212673/s
+     iteration_duration.............: avg=2.79s    min=390.51ms med=2.7s    max=7.16s   p(90)=3.9s     p(95)=4.51s  
+     iterations.....................: 556     17.212673/s
+     vus............................: 6       min=6          max=50
+     vus_max........................: 50      min=50         max=50
+
+
+running (0m32.3s), 00/50 VUs, 556 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+time="2026-07-09T19:21:20Z" level=error msg="thresholds on metrics 'http_req_duration{endpoint:login}' have been 
+crossed"
+
+
+
+=== Auth | Postgres | GET /api/auth/users ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-9c7a80125588 Creating 
+ Container kafka-microsservices-java-k6-run-9c7a80125588 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/auth-users.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m00.9s), 50/50 VUs, 26 complete and 0 interrupted iterations
+default   [   3% ] 50 VUs  00.9s/30s
+
+running (0m01.9s), 50/50 VUs, 104 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.9s/30s
+
+running (0m02.9s), 50/50 VUs, 187 complete and 0 interrupted iterations
+default   [  10% ] 50 VUs  02.9s/30s
+
+running (0m03.9s), 50/50 VUs, 266 complete and 0 interrupted iterations
+default   [  13% ] 50 VUs  03.9s/30s
+
+running (0m04.9s), 50/50 VUs, 377 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.9s/30s
+
+running (0m05.9s), 50/50 VUs, 477 complete and 0 interrupted iterations
+default   [  20% ] 50 VUs  05.9s/30s
+
+running (0m06.9s), 50/50 VUs, 580 complete and 0 interrupted iterations
+default   [  23% ] 50 VUs  06.9s/30s
+
+running (0m07.9s), 50/50 VUs, 676 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.9s/30s
+
+running (0m08.9s), 50/50 VUs, 749 complete and 0 interrupted iterations
+default   [  30% ] 50 VUs  08.9s/30s
+
+running (0m09.9s), 50/50 VUs, 853 complete and 0 interrupted iterations
+default   [  33% ] 50 VUs  09.9s/30s
+
+running (0m10.9s), 50/50 VUs, 1022 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.9s/30s
+
+running (0m11.9s), 50/50 VUs, 1129 complete and 0 interrupted iterations
+default   [  40% ] 50 VUs  11.9s/30s
+
+running (0m12.9s), 50/50 VUs, 1213 complete and 0 interrupted iterations
+default   [  43% ] 50 VUs  12.9s/30s
+
+running (0m13.9s), 50/50 VUs, 1343 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.9s/30s
+
+running (0m14.9s), 50/50 VUs, 1509 complete and 0 interrupted iterations
+default   [  50% ] 50 VUs  14.9s/30s
+
+running (0m15.9s), 50/50 VUs, 1702 complete and 0 interrupted iterations
+default   [  53% ] 50 VUs  15.9s/30s
+
+running (0m16.9s), 50/50 VUs, 1835 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.9s/30s
+
+running (0m17.9s), 50/50 VUs, 1951 complete and 0 interrupted iterations
+default   [  60% ] 50 VUs  17.9s/30s
+
+running (0m18.9s), 50/50 VUs, 2097 complete and 0 interrupted iterations
+default   [  63% ] 50 VUs  18.9s/30s
+
+running (0m19.9s), 50/50 VUs, 2287 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.9s/30s
+
+running (0m20.9s), 50/50 VUs, 2477 complete and 0 interrupted iterations
+default   [  70% ] 50 VUs  20.9s/30s
+
+running (0m21.9s), 50/50 VUs, 2617 complete and 0 interrupted iterations
+default   [  73% ] 50 VUs  21.9s/30s
+
+running (0m22.9s), 50/50 VUs, 2747 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.9s/30s
+
+running (0m23.9s), 50/50 VUs, 2888 complete and 0 interrupted iterations
+default   [  80% ] 50 VUs  23.9s/30s
+
+running (0m24.9s), 50/50 VUs, 3118 complete and 0 interrupted iterations
+default   [  83% ] 50 VUs  24.9s/30s
+
+running (0m25.9s), 50/50 VUs, 3333 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.9s/30s
+
+running (0m26.9s), 50/50 VUs, 3550 complete and 0 interrupted iterations
+default   [  90% ] 50 VUs  26.9s/30s
+
+running (0m27.9s), 50/50 VUs, 3681 complete and 0 interrupted iterations
+default   [  93% ] 50 VUs  27.9s/30s
+
+running (0m28.9s), 50/50 VUs, 3833 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.9s/30s
+
+running (0m29.9s), 50/50 VUs, 4066 complete and 0 interrupted iterations
+default   [ 100% ] 50 VUs  29.9s/30s
+
+     Ô£ô users 200
+
+     checks.........................: 100.00% 4147 out of 4147
+     data_received..................: 1.5 MB  51 kB/s
+     data_sent......................: 365 kB  12 kB/s
+     http_req_blocked...............: avg=780.48-Ás min=5.9-Ás    med=13.8-Ás   max=142.98ms p(90)=22.64-Ás  p(95)=49.17-Ás 
+     http_req_connecting............: avg=100.26-Ás min=0s       med=0s       max=108.96ms p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=257.69ms min=14.16ms  med=200.25ms max=1.69s    p(90)=510.72ms p(95)=671.47ms
+     Ô£ô { endpoint:users }...........: avg=257.69ms min=14.16ms  med=200.25ms max=1.69s    p(90)=510.72ms p(95)=671.47ms
+       { expected_response:true }...: avg=257.69ms min=14.16ms  med=200.25ms max=1.69s    p(90)=510.72ms p(95)=671.47ms
+   Ô£ô http_req_failed................: 0.00%   0 out of 4147
+     http_req_receiving.............: avg=5.73ms   min=45.3-Ás   med=1.61ms   max=141.51ms p(90)=15.42ms  p(95)=22.89ms 
+     http_req_sending...............: avg=123.15-Ás min=15.6-Ás   med=41-Ás     max=33.57ms  p(90)=125.11-Ás p(95)=201.95-Ás
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=251.83ms min=13.36ms  med=195.59ms max=1.68s    p(90)=506.2ms  p(95)=662.31ms
+     http_reqs......................: 4147    137.383121/s
+     iteration_duration.............: avg=362.5ms  min=114.85ms med=303.99ms max=1.87s    p(90)=620.04ms p(95)=781.12ms
+     iterations.....................: 4147    137.383121/s
+     vus............................: 50      min=50           max=50
+     vus_max........................: 50      min=50           max=50
+
+
+running (0m30.2s), 00/50 VUs, 4147 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Product | Postgres | GET /api/products ===
+docker :  Container ecommerce-redis Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-redis Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-postgres Running 
+ Container ecommerce-app Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-31f0528a8606 Creating 
+ Container kafka-microsservices-java-k6-run-31f0528a8606 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/products-list.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 351 complete and 0 interrupted iterations
+default   [   3% ] 50 VUs  01.0s/30s
+
+running (0m02.0s), 50/50 VUs, 724 complete and 0 interrupted iterations
+default   [   7% ] 50 VUs  02.0s/30s
+
+running (0m03.0s), 50/50 VUs, 998 complete and 0 interrupted iterations
+default   [  10% ] 50 VUs  03.0s/30s
+
+running (0m04.0s), 50/50 VUs, 1337 complete and 0 interrupted iterations
+default   [  13% ] 50 VUs  04.0s/30s
+
+running (0m05.0s), 50/50 VUs, 1744 complete and 0 interrupted iterations
+default   [  17% ] 50 VUs  05.0s/30s
+
+running (0m06.0s), 50/50 VUs, 2093 complete and 0 interrupted iterations
+default   [  20% ] 50 VUs  06.0s/30s
+
+running (0m07.0s), 50/50 VUs, 2515 complete and 0 interrupted iterations
+default   [  23% ] 50 VUs  07.0s/30s
+
+running (0m08.0s), 50/50 VUs, 2850 complete and 0 interrupted iterations
+default   [  27% ] 50 VUs  08.0s/30s
+
+running (0m09.0s), 50/50 VUs, 3113 complete and 0 interrupted iterations
+default   [  30% ] 50 VUs  09.0s/30s
+
+running (0m10.0s), 50/50 VUs, 3327 complete and 0 interrupted iterations
+default   [  33% ] 50 VUs  10.0s/30s
+
+running (0m11.0s), 50/50 VUs, 3660 complete and 0 interrupted iterations
+default   [  37% ] 50 VUs  11.0s/30s
+
+running (0m12.0s), 50/50 VUs, 4016 complete and 0 interrupted iterations
+default   [  40% ] 50 VUs  12.0s/30s
+
+running (0m13.0s), 50/50 VUs, 4310 complete and 0 interrupted iterations
+default   [  43% ] 50 VUs  13.0s/30s
+
+running (0m14.0s), 50/50 VUs, 4623 complete and 0 interrupted iterations
+default   [  47% ] 50 VUs  14.0s/30s
+
+running (0m15.0s), 50/50 VUs, 4983 complete and 0 interrupted iterations
+default   [  50% ] 50 VUs  15.0s/30s
+
+running (0m16.0s), 50/50 VUs, 5296 complete and 0 interrupted iterations
+default   [  53% ] 50 VUs  16.0s/30s
+
+running (0m17.0s), 50/50 VUs, 5651 complete and 0 interrupted iterations
+default   [  57% ] 50 VUs  17.0s/30s
+
+running (0m18.0s), 50/50 VUs, 5957 complete and 0 interrupted iterations
+default   [  60% ] 50 VUs  18.0s/30s
+
+running (0m19.0s), 50/50 VUs, 6230 complete and 0 interrupted iterations
+default   [  63% ] 50 VUs  19.0s/30s
+
+running (0m20.0s), 50/50 VUs, 6561 complete and 0 interrupted iterations
+default   [  67% ] 50 VUs  20.0s/30s
+
+running (0m21.0s), 50/50 VUs, 6871 complete and 0 interrupted iterations
+default   [  70% ] 50 VUs  21.0s/30s
+
+running (0m22.0s), 50/50 VUs, 7192 complete and 0 interrupted iterations
+default   [  73% ] 50 VUs  22.0s/30s
+
+running (0m23.0s), 50/50 VUs, 7499 complete and 0 interrupted iterations
+default   [  77% ] 50 VUs  23.0s/30s
+
+running (0m24.0s), 50/50 VUs, 7839 complete and 0 interrupted iterations
+default   [  80% ] 50 VUs  24.0s/30s
+
+running (0m25.0s), 50/50 VUs, 8245 complete and 0 interrupted iterations
+default   [  83% ] 50 VUs  25.0s/30s
+
+running (0m26.0s), 50/50 VUs, 8666 complete and 0 interrupted iterations
+default   [  87% ] 50 VUs  26.0s/30s
+
+running (0m27.0s), 50/50 VUs, 9052 complete and 0 interrupted iterations
+default   [  90% ] 50 VUs  27.0s/30s
+
+running (0m28.0s), 50/50 VUs, 9400 complete and 0 interrupted iterations
+default   [  93% ] 50 VUs  28.0s/30s
+
+running (0m29.0s), 50/50 VUs, 9731 complete and 0 interrupted iterations
+default   [  97% ] 50 VUs  29.0s/30s
+
+running (0m30.0s), 50/50 VUs, 10069 complete and 0 interrupted iterations
+default   [ 100% ] 50 VUs  30.0s/30s
+
+     Ô£ô products 200
+
+     checks.........................: 100.00% 10124 out of 10124
+     data_received..................: 27 MB   892 kB/s
+     data_sent......................: 871 kB  29 kB/s
+     http_req_blocked...............: avg=107.69-Ás min=5.5-Ás    med=12.5-Ás   max=28.66ms  p(90)=20.47-Ás  p(95)=45.69-Ás 
+     http_req_connecting............: avg=48.55-Ás  min=0s       med=0s       max=23.35ms  p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=44.35ms  min=4.23ms   med=32.59ms  max=529.46ms p(90)=91.11ms  p(95)=118.2ms 
+     Ô£ô { endpoint:products-list }...: avg=44.35ms  min=4.23ms   med=32.59ms  max=529.46ms p(90)=91.11ms  p(95)=118.2ms 
+       { expected_response:true }...: avg=44.35ms  min=4.23ms   med=32.59ms  max=529.46ms p(90)=91.11ms  p(95)=118.2ms 
+   Ô£ô http_req_failed................: 0.00%   0 out of 10124
+     http_req_receiving.............: avg=4.74ms   min=42.5-Ás   med=876.83-Ás max=174.3ms  p(90)=14.12ms  p(95)=22.78ms 
+     http_req_sending...............: avg=164.73-Ás min=13.6-Ás   med=35.3-Ás   max=83.68ms  p(90)=126.49-Ás p(95)=298.23-Ás
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=39.45ms  min=3.56ms   med=28.97ms  max=506.81ms p(90)=80.09ms  p(95)=104ms   
+     http_reqs......................: 10124   336.075237/s
+     iteration_duration.............: avg=148.36ms min=104.78ms med=136.48ms max=632.63ms p(90)=196.92ms p(95)=223.3ms 
+     iterations.....................: 10124   336.075237/s
+     vus............................: 50      min=50             max=50
+     vus_max........................: 50      min=50             max=50
+
+
+running (0m30.1s), 00/50 VUs, 10124 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Product | Postgres | GET /api/products/{id} ===
+docker :  Container ecommerce-postgres Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-postgres Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-app Running 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-a2e2cc34ccfb Creating 
+ Container kafka-microsservices-java-k6-run-a2e2cc34ccfb Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/products-by-id.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 118 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m02.0s), 50/50 VUs, 451 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m03.0s), 50/50 VUs, 741 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m04.0s), 50/50 VUs, 912 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m05.0s), 50/50 VUs, 1181 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.7s/30s
+
+running (0m06.0s), 50/50 VUs, 1449 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m07.0s), 50/50 VUs, 1766 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m08.0s), 50/50 VUs, 2124 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m09.0s), 50/50 VUs, 2492 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m10.0s), 50/50 VUs, 2806 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m11.0s), 50/50 VUs, 3114 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m12.0s), 50/50 VUs, 3365 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m13.0s), 50/50 VUs, 3716 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m14.0s), 50/50 VUs, 4090 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 4404 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m16.0s), 50/50 VUs, 4671 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m17.0s), 50/50 VUs, 5021 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m18.0s), 50/50 VUs, 5427 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m19.0s), 50/50 VUs, 5832 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m20.0s), 50/50 VUs, 6182 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.7s/30s
+
+running (0m21.0s), 50/50 VUs, 6448 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m22.0s), 50/50 VUs, 6723 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m23.0s), 50/50 VUs, 7027 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m24.0s), 50/50 VUs, 7380 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m25.0s), 50/50 VUs, 7730 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m26.0s), 50/50 VUs, 8019 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m27.0s), 50/50 VUs, 8398 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m28.0s), 50/50 VUs, 8860 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m29.0s), 50/50 VUs, 9327 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m30.0s), 50/50 VUs, 9774 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+     Ô£ô product by id 200
+
+     checks..........................: 100.00% 9942 out of 9942
+     data_received...................: 4.5 MB  148 kB/s
+     data_sent.......................: 1.2 MB  40 kB/s
+     http_req_blocked................: avg=88.44-Ás  min=4.1-Ás      med=12.2-Ás   max=58.57ms  p(90)=20.6-Ás   p(95)=39.89-Ás 
+     http_req_connecting.............: avg=42.32-Ás  min=0s         med=0s       max=58.37ms  p(90)=0s       p(95)=0s      
+     http_req_duration...............: avg=46.05ms  min=2.84ms     med=31.5ms   max=548.82ms p(90)=101.93ms p(95)=138.08ms
+     Ô£ô { endpoint:products-by-id }...: avg=46.03ms  min=2.84ms     med=31.5ms   max=548.82ms p(90)=101.79ms p(95)=138.05ms
+       { expected_response:true }....: avg=46.05ms  min=2.84ms     med=31.5ms   max=548.82ms p(90)=101.93ms p(95)=138.08ms
+   Ô£ô http_req_failed.................: 0.00%   0 out of 9944
+     http_req_receiving..............: avg=4.21ms   min=-2747384ns med=541.38-Ás max=232.71ms p(90)=13.11ms  p(95)=21.53ms 
+     http_req_sending................: avg=165.93-Ás min=13.6-Ás     med=35.67-Ás  max=53.75ms  p(90)=117.9-Ás  p(95)=292.84-Ás
+     http_req_tls_handshaking........: avg=0s       min=0s         med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting................: avg=41.67ms  min=2.52ms     med=27.72ms  max=504.04ms p(90)=92.44ms  p(95)=126.37ms
+     http_reqs.......................: 9944    327.236581/s
+     iteration_duration..............: avg=150.93ms min=103.26ms   med=135.88ms max=663.02ms p(90)=209.92ms p(95)=245.62ms
+     iterations......................: 9942    327.170766/s
+     vus.............................: 50      min=50           max=50
+     vus_max.........................: 50      min=50           max=50
+
+
+running (0m30.4s), 00/50 VUs, 9942 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Customer | Postgres | GET /api/customers ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-16905a468775 Creating 
+ Container kafka-microsservices-java-k6-run-16905a468775 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/customers-list.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m00.9s), 50/50 VUs, 222 complete and 0 interrupted iterations
+default   [   3% ] 50 VUs  00.9s/30s
+
+running (0m01.9s), 50/50 VUs, 443 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.9s/30s
+
+running (0m02.9s), 50/50 VUs, 670 complete and 0 interrupted iterations
+default   [  10% ] 50 VUs  02.9s/30s
+
+running (0m03.9s), 50/50 VUs, 930 complete and 0 interrupted iterations
+default   [  13% ] 50 VUs  03.9s/30s
+
+running (0m04.9s), 50/50 VUs, 1121 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.9s/30s
+
+running (0m05.9s), 50/50 VUs, 1351 complete and 0 interrupted iterations
+default   [  20% ] 50 VUs  05.9s/30s
+
+running (0m06.9s), 50/50 VUs, 1623 complete and 0 interrupted iterations
+default   [  23% ] 50 VUs  06.9s/30s
+
+running (0m07.9s), 50/50 VUs, 1815 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.9s/30s
+
+running (0m08.9s), 50/50 VUs, 2044 complete and 0 interrupted iterations
+default   [  30% ] 50 VUs  08.9s/30s
+
+running (0m09.9s), 50/50 VUs, 2320 complete and 0 interrupted iterations
+default   [  33% ] 50 VUs  09.9s/30s
+
+running (0m10.9s), 50/50 VUs, 2593 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.9s/30s
+
+running (0m11.9s), 50/50 VUs, 2859 complete and 0 interrupted iterations
+default   [  40% ] 50 VUs  11.9s/30s
+
+running (0m12.9s), 50/50 VUs, 3119 complete and 0 interrupted iterations
+default   [  43% ] 50 VUs  12.9s/30s
+
+running (0m13.9s), 50/50 VUs, 3362 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.9s/30s
+
+running (0m14.9s), 50/50 VUs, 3615 complete and 0 interrupted iterations
+default   [  50% ] 50 VUs  14.9s/30s
+
+running (0m15.9s), 50/50 VUs, 3951 complete and 0 interrupted iterations
+default   [  53% ] 50 VUs  15.9s/30s
+
+running (0m16.9s), 50/50 VUs, 4342 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.9s/30s
+
+running (0m17.9s), 50/50 VUs, 4760 complete and 0 interrupted iterations
+default   [  60% ] 50 VUs  17.9s/30s
+
+running (0m18.9s), 50/50 VUs, 5067 complete and 0 interrupted iterations
+default   [  63% ] 50 VUs  18.9s/30s
+
+running (0m19.9s), 50/50 VUs, 5479 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.9s/30s
+
+running (0m20.9s), 50/50 VUs, 5919 complete and 0 interrupted iterations
+default   [  70% ] 50 VUs  20.9s/30s
+
+running (0m21.9s), 50/50 VUs, 6370 complete and 0 interrupted iterations
+default   [  73% ] 50 VUs  21.9s/30s
+
+running (0m22.9s), 50/50 VUs, 6839 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.9s/30s
+
+running (0m23.9s), 50/50 VUs, 7281 complete and 0 interrupted iterations
+default   [  80% ] 50 VUs  23.9s/30s
+
+running (0m24.9s), 50/50 VUs, 7674 complete and 0 interrupted iterations
+default   [  83% ] 50 VUs  24.9s/30s
+
+running (0m25.9s), 50/50 VUs, 8048 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.9s/30s
+
+running (0m26.9s), 50/50 VUs, 8441 complete and 0 interrupted iterations
+default   [  90% ] 50 VUs  26.9s/30s
+
+running (0m27.9s), 50/50 VUs, 8888 complete and 0 interrupted iterations
+default   [  93% ] 50 VUs  27.9s/30s
+
+running (0m28.9s), 50/50 VUs, 9347 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.9s/30s
+
+running (0m29.9s), 50/50 VUs, 9785 complete and 0 interrupted iterations
+default   [ 100% ] 50 VUs  29.9s/30s
+
+     Ô£ô customers 200
+
+     checks..........................: 100.00% 9874 out of 9874
+     data_received...................: 13 MB   427 kB/s
+     data_sent.......................: 859 kB  29 kB/s
+     http_req_blocked................: avg=135.4-Ás  min=4.8-Ás    med=11.5-Ás   max=40.69ms  p(90)=17.5-Ás   p(95)=27.53-Ás 
+     http_req_connecting.............: avg=27-Ás     min=0s       med=0s       max=40.5ms   p(90)=0s       p(95)=0s      
+     http_req_duration...............: avg=46.71ms  min=2.29ms   med=22.05ms  max=662.55ms p(90)=123.36ms p(95)=163.16ms
+     Ô£ô { endpoint:customers-list }...: avg=46.71ms  min=2.29ms   med=22.05ms  max=662.55ms p(90)=123.36ms p(95)=163.16ms
+       { expected_response:true }....: avg=46.71ms  min=2.29ms   med=22.05ms  max=662.55ms p(90)=123.36ms p(95)=163.16ms
+   Ô£ô http_req_failed.................: 0.00%   0 out of 9874
+     http_req_receiving..............: avg=3.98ms   min=40.5-Ás   med=265.07-Ás max=343.05ms p(90)=10.82ms  p(95)=19.69ms 
+     http_req_sending................: avg=348.86-Ás min=13.2-Ás   med=31.7-Ás   max=367.15ms p(90)=102.62-Ás p(95)=204.58-Ás
+     http_req_tls_handshaking........: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting................: avg=42.38ms  min=2.12ms   med=20ms     max=609.13ms p(90)=113.93ms p(95)=152.71ms
+     http_reqs.......................: 9874    327.734314/s
+     iteration_duration..............: avg=151.88ms min=102.82ms med=126.82ms max=853.79ms p(90)=233.83ms p(95)=278.03ms
+     iterations......................: 9874    327.734314/s
+     vus.............................: 50      min=50           max=50
+     vus_max.........................: 50      min=50           max=50
+
+
+running (0m30.1s), 00/50 VUs, 9874 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Customer | Postgres | GET /api/customers/{id} ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-567027ed3a28 Creating 
+ Container kafka-microsservices-java-k6-run-567027ed3a28 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/customers-by-id.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 231 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m02.0s), 50/50 VUs, 643 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m03.0s), 50/50 VUs, 1115 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m04.0s), 50/50 VUs, 1539 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m05.0s), 50/50 VUs, 1797 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.8s/30s
+
+running (0m06.0s), 50/50 VUs, 2040 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m07.0s), 50/50 VUs, 2334 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m08.0s), 50/50 VUs, 2687 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m09.0s), 50/50 VUs, 2993 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m10.0s), 50/50 VUs, 3337 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m11.0s), 50/50 VUs, 3735 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m12.0s), 50/50 VUs, 4127 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m13.0s), 50/50 VUs, 4554 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m14.0s), 50/50 VUs, 4965 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 5348 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m16.0s), 50/50 VUs, 5738 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m17.0s), 50/50 VUs, 6136 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m18.0s), 50/50 VUs, 6594 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m19.0s), 50/50 VUs, 7020 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m20.0s), 50/50 VUs, 7452 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.7s/30s
+
+running (0m21.0s), 50/50 VUs, 7909 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m22.0s), 50/50 VUs, 8382 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m23.0s), 50/50 VUs, 8870 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m24.0s), 50/50 VUs, 9320 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m25.0s), 50/50 VUs, 9717 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m26.0s), 50/50 VUs, 10138 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m27.0s), 50/50 VUs, 10617 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m28.0s), 50/50 VUs, 11083 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m29.0s), 50/50 VUs, 11552 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m30.0s), 50/50 VUs, 12016 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+     Ô£ô customer by id 200
+
+     checks...........................: 100.00% 12212 out of 12212
+     data_received....................: 5.2 MB  172 kB/s
+     data_sent........................: 1.5 MB  50 kB/s
+     http_req_blocked.................: avg=54.27-Ás  min=4-Ás      med=11.4-Ás   max=66.57ms  p(90)=17.4-Ás   p(95)=26.3-Ás  
+     http_req_connecting..............: avg=20.48-Ás  min=0s       med=0s       max=33.08ms  p(90)=0s       p(95)=0s      
+     http_req_duration................: avg=19.86ms  min=1.85ms   med=7.97ms   max=345.39ms p(90)=50.67ms  p(95)=78.23ms 
+     Ô£ô { endpoint:customers-by-id }...: avg=19.85ms  min=1.85ms   med=7.97ms   max=345.39ms p(90)=50.63ms  p(95)=78.22ms 
+       { expected_response:true }.....: avg=19.86ms  min=1.85ms   med=7.97ms   max=345.39ms p(90)=50.67ms  p(95)=78.23ms 
+   Ô£ô http_req_failed..................: 0.00%   0 out of 12214
+     http_req_receiving...............: avg=1.51ms   min=30-Ás     med=201.52-Ás max=156.69ms p(90)=1.95ms   p(95)=8.17ms  
+     http_req_sending.................: avg=118.36-Ás min=11.6-Ás   med=32.99-Ás  max=72.99ms  p(90)=99.11-Ás  p(95)=162.01-Ás
+     http_req_tls_handshaking.........: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting.................: avg=18.23ms  min=1.65ms   med=7.07ms   max=332.71ms p(90)=46.94ms  p(95)=69.96ms 
+     http_reqs........................: 12214   402.629226/s
+     iteration_duration...............: avg=122.94ms min=102.26ms med=110.46ms max=465.09ms p(90)=158.12ms p(95)=185.32ms
+     iterations.......................: 12212   402.563297/s
+     vus..............................: 50      min=50             max=50
+     vus_max..........................: 50      min=50             max=50
+
+
+running (0m30.3s), 00/50 VUs, 12212 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Order | Postgres | GET /api/orders/customer/{id} ===
+docker :  Container ecommerce-postgres Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-postgres Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-app Running 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-7fd8ea336856 Creating 
+ Container kafka-microsservices-java-k6-run-7fd8ea336856 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/orders-list.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 217 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m02.0s), 50/50 VUs, 628 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m03.0s), 50/50 VUs, 854 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m04.0s), 50/50 VUs, 1094 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m05.0s), 50/50 VUs, 1374 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.7s/30s
+
+running (0m06.0s), 50/50 VUs, 1667 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m07.0s), 50/50 VUs, 1957 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m08.0s), 50/50 VUs, 2206 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m09.0s), 50/50 VUs, 2409 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m10.0s), 50/50 VUs, 2656 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m11.0s), 50/50 VUs, 2951 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m12.0s), 50/50 VUs, 3335 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m13.0s), 50/50 VUs, 3750 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m14.0s), 50/50 VUs, 4162 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 4441 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m16.0s), 50/50 VUs, 4749 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m17.0s), 50/50 VUs, 5053 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m18.0s), 50/50 VUs, 5336 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m19.0s), 50/50 VUs, 5733 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m20.0s), 50/50 VUs, 6024 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.8s/30s
+
+running (0m21.0s), 50/50 VUs, 6269 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m22.0s), 50/50 VUs, 6583 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m23.0s), 50/50 VUs, 6950 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m24.0s), 50/50 VUs, 7308 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m24.9s), 50/50 VUs, 7652 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m26.0s), 50/50 VUs, 8026 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m27.0s), 50/50 VUs, 8402 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m27.9s), 50/50 VUs, 8790 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m28.9s), 50/50 VUs, 9231 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m29.9s), 50/50 VUs, 9584 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+     Ô£ô orders list 200
+
+     checks.........................: 100.00% 9736 out of 9736
+     data_received..................: 2.1 MB  69 kB/s
+     data_sent......................: 1.3 MB  42 kB/s
+     http_req_blocked...............: avg=77.78-Ás  min=5.4-Ás    med=12.5-Ás   max=135.89ms p(90)=20.1-Ás   p(95)=37.45-Ás 
+     http_req_connecting............: avg=20.78-Ás  min=0s       med=0s       max=13.9ms   p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=49.39ms  min=3.3ms    med=33.67ms  max=558.01ms p(90)=108.41ms p(95)=141.84ms
+     Ô£ô { endpoint:orders-list }.....: avg=49.38ms  min=3.3ms    med=33.67ms  max=558.01ms p(90)=108.37ms p(95)=141.81ms
+       { expected_response:true }...: avg=49.39ms  min=3.3ms    med=33.67ms  max=558.01ms p(90)=108.41ms p(95)=141.84ms
+   Ô£ô http_req_failed................: 0.00%   0 out of 9738
+     http_req_receiving.............: avg=3.99ms   min=42.72-Ás  med=422.6-Ás  max=304.32ms p(90)=12.86ms  p(95)=22.09ms 
+     http_req_sending...............: avg=162.7-Ás  min=13.9-Ás   med=36.6-Ás   max=68.29ms  p(90)=121.9-Ás  p(95)=285.08-Ás
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=45.24ms  min=2.96ms   med=30.54ms  max=537.73ms p(90)=99.37ms  p(95)=131.82ms
+     http_reqs......................: 9738    320.552873/s
+     iteration_duration.............: avg=154.32ms min=104.13ms med=137.74ms max=658.39ms p(90)=216.01ms p(95)=251.79ms
+     iterations.....................: 9736    320.487038/s
+     vus............................: 50      min=50           max=50
+     vus_max........................: 50      min=50           max=50
+
+
+running (0m30.4s), 00/50 VUs, 9736 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Order | Postgres | POST /api/orders ===
+docker :  Container ecommerce-postgres Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-postgres Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-app Running 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-d9c55b2ed217 Creating 
+ Container kafka-microsservices-java-k6-run-d9c55b2ed217 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/orders-create.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 7 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m02.0s), 50/50 VUs, 201 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m03.0s), 50/50 VUs, 415 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m04.0s), 50/50 VUs, 605 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m05.0s), 50/50 VUs, 865 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.7s/30s
+
+running (0m06.0s), 50/50 VUs, 1107 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m07.0s), 50/50 VUs, 1476 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m08.0s), 50/50 VUs, 1783 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m09.0s), 50/50 VUs, 2052 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m10.0s), 50/50 VUs, 2316 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m11.0s), 50/50 VUs, 2706 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m12.0s), 50/50 VUs, 3089 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m13.0s), 50/50 VUs, 3424 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m14.0s), 50/50 VUs, 3604 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 3915 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m16.0s), 50/50 VUs, 4262 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m17.0s), 50/50 VUs, 4496 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m18.0s), 50/50 VUs, 4870 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m19.0s), 50/50 VUs, 5171 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m20.0s), 50/50 VUs, 5429 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.7s/30s
+
+running (0m21.0s), 50/50 VUs, 5762 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m22.0s), 50/50 VUs, 6171 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m23.0s), 50/50 VUs, 6521 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m24.0s), 50/50 VUs, 6767 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m25.0s), 50/50 VUs, 7065 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m26.0s), 50/50 VUs, 7422 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m27.0s), 50/50 VUs, 7831 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m28.0s), 50/50 VUs, 8222 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m29.0s), 50/50 VUs, 8514 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m30.0s), 50/50 VUs, 8796 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+     Ô£ô order create 201
+
+     checks.........................: 100.00% 8911 out of 8911
+     data_received..................: 3.5 MB  115 kB/s
+     data_sent......................: 1.7 MB  56 kB/s
+     http_req_blocked...............: avg=62.54-Ás  min=6-Ás      med=13.1-Ás   max=21.86ms p(90)=22.9-Ás   p(95)=50.2-Ás  
+     http_req_connecting............: avg=14.89-Ás  min=0s       med=0s       max=17.34ms p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=64.81ms  min=5.89ms   med=40.84ms  max=1.02s   p(90)=140.19ms p(95)=184.48ms
+     Ô£ô { endpoint:orders-create }...: avg=64.8ms   min=6.14ms   med=40.84ms  max=1.02s   p(90)=140.12ms p(95)=184.34ms
+       { expected_response:true }...: avg=64.81ms  min=5.89ms   med=40.84ms  max=1.02s   p(90)=140.19ms p(95)=184.48ms
+   Ô£ô http_req_failed................: 0.00%   0 out of 8913
+     http_req_receiving.............: avg=2.59ms   min=35-Ás     med=517.37-Ás max=92.66ms p(90)=7.53ms   p(95)=12.83ms 
+     http_req_sending...............: avg=182.34-Ás min=16.7-Ás   med=51-Ás     max=36.74ms p(90)=181.58-Ás p(95)=397.41-Ás
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s      p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=62.03ms  min=4.73ms   med=37.87ms  max=1.02s   p(90)=135.8ms  p(95)=180.69ms
+     http_reqs......................: 8913    293.355822/s
+     iteration_duration.............: avg=168.39ms min=106.77ms med=144.67ms max=1.13s   p(90)=245.28ms p(95)=289.65ms
+     iterations.....................: 8911    293.289995/s
+     vus............................: 50      min=50           max=50
+     vus_max........................: 50      min=50           max=50
+
+
+running (0m30.4s), 00/50 VUs, 8911 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Order | Postgres | POST /api/orders/{id}/items ===
+docker :  Container ecommerce-postgres Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-postgres Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-app Running 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-836f53b18c5f Creating 
+ Container kafka-microsservices-java-k6-run-836f53b18c5f Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/orders-add-item.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m00.9s), 50/50 VUs, 0 complete and 0 interrupted iterations
+default   [   1% ] 50 VUs  00.3s/30s
+
+running (0m01.9s), 50/50 VUs, 48 complete and 0 interrupted iterations
+default   [   4% ] 50 VUs  01.3s/30s
+
+running (0m02.9s), 50/50 VUs, 173 complete and 0 interrupted iterations
+default   [   8% ] 50 VUs  02.3s/30s
+
+running (0m03.9s), 50/50 VUs, 298 complete and 0 interrupted iterations
+default   [  11% ] 50 VUs  03.3s/30s
+
+running (0m04.9s), 50/50 VUs, 388 complete and 0 interrupted iterations
+default   [  14% ] 50 VUs  04.3s/30s
+
+running (0m05.9s), 50/50 VUs, 498 complete and 0 interrupted iterations
+default   [  18% ] 50 VUs  05.3s/30s
+
+running (0m06.9s), 50/50 VUs, 614 complete and 0 interrupted iterations
+default   [  21% ] 50 VUs  06.3s/30s
+
+running (0m07.9s), 50/50 VUs, 776 complete and 0 interrupted iterations
+default   [  24% ] 50 VUs  07.3s/30s
+
+running (0m08.9s), 50/50 VUs, 924 complete and 0 interrupted iterations
+default   [  28% ] 50 VUs  08.3s/30s
+
+running (0m09.9s), 50/50 VUs, 1000 complete and 0 interrupted iterations
+default   [  31% ] 50 VUs  09.3s/30s
+
+running (0m10.9s), 50/50 VUs, 1057 complete and 0 interrupted iterations
+default   [  34% ] 50 VUs  10.3s/30s
+
+running (0m11.9s), 50/50 VUs, 1169 complete and 0 interrupted iterations
+default   [  38% ] 50 VUs  11.3s/30s
+
+running (0m12.9s), 50/50 VUs, 1289 complete and 0 interrupted iterations
+default   [  41% ] 50 VUs  12.3s/30s
+
+running (0m13.9s), 50/50 VUs, 1384 complete and 0 interrupted iterations
+default   [  44% ] 50 VUs  13.3s/30s
+
+running (0m14.9s), 50/50 VUs, 1468 complete and 0 interrupted iterations
+default   [  48% ] 50 VUs  14.3s/30s
+
+running (0m15.9s), 50/50 VUs, 1545 complete and 0 interrupted iterations
+default   [  51% ] 50 VUs  15.3s/30s
+
+running (0m16.9s), 50/50 VUs, 1631 complete and 0 interrupted iterations
+default   [  54% ] 50 VUs  16.3s/30s
+
+running (0m17.9s), 50/50 VUs, 1793 complete and 0 interrupted iterations
+default   [  58% ] 50 VUs  17.3s/30s
+
+running (0m18.9s), 50/50 VUs, 1927 complete and 0 interrupted iterations
+default   [  61% ] 50 VUs  18.3s/30s
+
+running (0m19.9s), 50/50 VUs, 2010 complete and 0 interrupted iterations
+default   [  64% ] 50 VUs  19.3s/30s
+
+running (0m20.9s), 50/50 VUs, 2077 complete and 0 interrupted iterations
+default   [  68% ] 50 VUs  20.3s/30s
+
+running (0m21.9s), 50/50 VUs, 2208 complete and 0 interrupted iterations
+default   [  71% ] 50 VUs  21.3s/30s
+
+running (0m22.9s), 50/50 VUs, 2316 complete and 0 interrupted iterations
+default   [  74% ] 50 VUs  22.3s/30s
+
+running (0m23.9s), 50/50 VUs, 2416 complete and 0 interrupted iterations
+default   [  78% ] 50 VUs  23.3s/30s
+
+running (0m24.9s), 50/50 VUs, 2487 complete and 0 interrupted iterations
+default   [  81% ] 50 VUs  24.3s/30s
+
+running (0m25.9s), 50/50 VUs, 2578 complete and 0 interrupted iterations
+default   [  84% ] 50 VUs  25.3s/30s
+
+running (0m26.9s), 50/50 VUs, 2665 complete and 0 interrupted iterations
+default   [  88% ] 50 VUs  26.3s/30s
+
+running (0m27.9s), 50/50 VUs, 2774 complete and 0 interrupted iterations
+default   [  91% ] 50 VUs  27.3s/30s
+
+running (0m28.9s), 50/50 VUs, 2876 complete and 0 interrupted iterations
+default   [  94% ] 50 VUs  28.3s/30s
+
+running (0m29.9s), 50/50 VUs, 2962 complete and 0 interrupted iterations
+default   [  98% ] 50 VUs  29.3s/30s
+
+running (0m30.9s), 22/50 VUs, 3034 complete and 0 interrupted iterations
+default Ôåô [ 100% ] 50 VUs  30s
+
+     Ô£ù add item 200
+      Ôå¦  14% ÔÇö Ô£ô 456 / Ô£ù 2600
+
+     checks...........................: 14.92% 456 out of 3056
+     data_received....................: 20 MB  650 kB/s
+     data_sent........................: 896 kB 29 kB/s
+     http_req_blocked.................: avg=1.98ms   min=10-Ás     med=817.32-Ás max=45.26ms  p(90)=4.75ms   p(95)=8.94ms  
+     http_req_connecting..............: avg=1.59ms   min=0s       med=574.1-Ás  max=45.05ms  p(90)=3.58ms   p(95)=7.55ms  
+     http_req_duration................: avg=389.04ms min=6.72ms   med=357.54ms max=1.67s    p(90)=692.36ms p(95)=834.22ms
+     Ô£ô { endpoint:orders-add-item }...: avg=389.25ms min=27.69ms  med=357.56ms max=1.67s    p(90)=692.79ms p(95)=834.69ms
+       { expected_response:true }.....: avg=367.03ms min=6.72ms   med=336.74ms max=1.32s    p(90)=677.85ms p(95)=877.52ms
+   Ô£ù http_req_failed..................: 84.99% 2600 out of 3059
+     http_req_receiving...............: avg=6.09ms   min=110.37-Ás med=1.84ms   max=145.67ms p(90)=16.39ms  p(95)=23.22ms 
+     http_req_sending.................: avg=391.59-Ás min=26.63-Ás  med=129.19-Ás max=66.44ms  p(90)=366.91-Ás p(95)=781.27-Ás
+     http_req_tls_handshaking.........: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting.................: avg=382.56ms min=5.93ms   med=350.24ms max=1.65s    p(90)=682ms    p(95)=828.52ms
+     http_reqs........................: 3059   98.533753/s
+     iteration_duration...............: avg=494.95ms min=128.49ms med=461.56ms max=1.77s    p(90)=799.87ms p(95)=941.38ms
+     iterations.......................: 3056   98.43712/s
+     vus..............................: 22     min=22           max=50
+     vus_max..........................: 50     min=50           max=50
+
+
+running (0m31.0s), 00/50 VUs, 3056 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+time="2026-07-09T19:26:42Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
+
+
+
+=== Order | Postgres | POST /api/orders/{id}/pay ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-ae2172211d6c Creating 
+ Container kafka-microsservices-java-k6-run-ae2172211d6c Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/orders-pay.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 76 complete and 0 interrupted iterations
+default   [   3% ] 50 VUs  00.8s/30s
+
+running (0m02.0s), 50/50 VUs, 111 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.8s/30s
+
+running (0m03.0s), 50/50 VUs, 160 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.8s/30s
+
+running (0m04.0s), 50/50 VUs, 205 complete and 0 interrupted iterations
+default   [  13% ] 50 VUs  03.8s/30s
+
+running (0m05.0s), 50/50 VUs, 252 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.8s/30s
+
+running (0m06.0s), 50/50 VUs, 318 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.8s/30s
+
+running (0m07.0s), 50/50 VUs, 398 complete and 0 interrupted iterations
+default   [  23% ] 50 VUs  06.8s/30s
+
+running (0m08.0s), 50/50 VUs, 463 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.8s/30s
+
+running (0m09.0s), 50/50 VUs, 533 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.8s/30s
+
+running (0m10.0s), 50/50 VUs, 610 complete and 0 interrupted iterations
+default   [  33% ] 50 VUs  09.8s/30s
+
+running (0m11.0s), 50/50 VUs, 717 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.8s/30s
+
+running (0m12.0s), 50/50 VUs, 834 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.8s/30s
+
+running (0m13.0s), 50/50 VUs, 883 complete and 0 interrupted iterations
+default   [  43% ] 50 VUs  12.8s/30s
+
+running (0m14.0s), 50/50 VUs, 909 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.8s/30s
+
+running (0m15.0s), 50/50 VUs, 953 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.8s/30s
+
+running (0m16.0s), 50/50 VUs, 968 complete and 0 interrupted iterations
+default   [  53% ] 50 VUs  15.8s/30s
+
+running (0m17.0s), 50/50 VUs, 1026 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.8s/30s
+
+running (0m18.0s), 50/50 VUs, 1085 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.8s/30s
+
+running (0m19.0s), 50/50 VUs, 1150 complete and 0 interrupted iterations
+default   [  63% ] 50 VUs  18.8s/30s
+
+running (0m20.0s), 50/50 VUs, 1201 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.8s/30s
+
+running (0m21.0s), 50/50 VUs, 1261 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.8s/30s
+
+running (0m22.0s), 50/50 VUs, 1344 complete and 0 interrupted iterations
+default   [  73% ] 50 VUs  21.8s/30s
+
+running (0m23.0s), 50/50 VUs, 1422 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.8s/30s
+
+running (0m23.9s), 50/50 VUs, 1469 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.8s/30s
+
+running (0m24.9s), 50/50 VUs, 1518 complete and 0 interrupted iterations
+default   [  83% ] 50 VUs  24.8s/30s
+
+running (0m25.9s), 50/50 VUs, 1582 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.8s/30s
+
+running (0m26.9s), 50/50 VUs, 1683 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.8s/30s
+
+running (0m27.9s), 50/50 VUs, 1773 complete and 0 interrupted iterations
+default   [  93% ] 50 VUs  27.8s/30s
+
+running (0m28.9s), 50/50 VUs, 1842 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.8s/30s
+
+running (0m29.9s), 50/50 VUs, 1915 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.8s/30s
+
+     Ô£ô order pay 200
+
+     checks.........................: 100.00% 1984 out of 1984
+     data_received..................: 3.2 MB  106 kB/s
+     data_sent......................: 1.2 MB  41 kB/s
+     http_req_blocked...............: avg=133.99-Ás min=6.7-Ás       med=13.9-Ás   max=37.17ms p(90)=29.47-Ás  p(95)=63.25-Ás 
+     http_req_connecting............: avg=78.22-Ás  min=0s          med=0s       max=36.98ms p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=216.65ms min=4.55ms      med=182.39ms max=1.69s   p(90)=417.57ms p(95)=564.72ms
+     Ô£ô { endpoint:orders-pay }......: avg=215.31ms min=11.36ms     med=177.58ms max=1.69s   p(90)=414.67ms p(95)=569.75ms
+       { expected_response:true }...: avg=216.65ms min=4.55ms      med=182.39ms max=1.69s   p(90)=417.57ms p(95)=564.72ms
+   Ô£ô http_req_failed................: 0.00%   0 out of 5954
+     http_req_receiving.............: avg=3.15ms   min=-78421796ns med=596.49-Ás max=96.16ms p(90)=9.72ms   p(95)=15.38ms 
+     http_req_sending...............: avg=206.39-Ás min=20.6-Ás      med=53.41-Ás  max=44.56ms p(90)=167.21-Ás p(95)=340.47-Ás
+     http_req_tls_handshaking.......: avg=0s       min=0s          med=0s       max=0s      p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=213.29ms min=3.56ms      med=178.7ms  max=1.69s   p(90)=414.84ms p(95)=562.54ms
+     http_reqs......................: 5954    195.677187/s
+     iteration_duration.............: avg=761.22ms min=162.66ms    med=681.16ms max=3.16s   p(90)=1.23s    p(95)=1.5s    
+     iterations.....................: 1984    65.203819/s
+     vus............................: 50      min=50           max=50
+     vus_max........................: 50      min=50           max=50
+
+
+running (0m30.4s), 00/50 VUs, 1984 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Payment | Postgres | POST /api/payments ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-791822ea469c Creating 
+ Container kafka-microsservices-java-k6-run-791822ea469c Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/payments-process.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m00.9s), 50/50 VUs, 48 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m01.9s), 50/50 VUs, 151 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m02.9s), 50/50 VUs, 276 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m03.9s), 50/50 VUs, 360 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m04.9s), 50/50 VUs, 431 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.7s/30s
+
+running (0m05.9s), 50/50 VUs, 532 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m06.9s), 50/50 VUs, 642 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m07.9s), 50/50 VUs, 770 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m08.9s), 50/50 VUs, 803 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m09.9s), 50/50 VUs, 840 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m10.9s), 50/50 VUs, 903 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m11.9s), 50/50 VUs, 968 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m12.9s), 50/50 VUs, 1050 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m13.9s), 50/50 VUs, 1178 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 1229 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m16.0s), 50/50 VUs, 1321 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m17.0s), 50/50 VUs, 1439 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m18.0s), 50/50 VUs, 1587 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m19.0s), 50/50 VUs, 1725 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m20.0s), 50/50 VUs, 1819 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.7s/30s
+
+running (0m21.0s), 50/50 VUs, 1884 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m22.0s), 50/50 VUs, 2079 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m23.0s), 50/50 VUs, 2226 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m24.0s), 50/50 VUs, 2386 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m25.0s), 50/50 VUs, 2496 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m26.0s), 50/50 VUs, 2640 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m27.0s), 50/50 VUs, 2796 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m28.0s), 50/50 VUs, 2995 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m29.0s), 50/50 VUs, 3215 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m30.0s), 50/50 VUs, 3321 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+running (0m31.0s), 00/50 VUs, 3427 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+     Ô£ô payment 201
+
+     checks............................: 100.00% 3427 out of 3427
+     data_received.....................: 4.0 MB  129 kB/s
+     data_sent.........................: 2.4 MB  78 kB/s
+     http_req_blocked..................: avg=71.35-Ás  min=5.2-Ás    med=13.3-Ás   max=42ms    p(90)=25.5-Ás   p(95)=63.49-Ás 
+     http_req_connecting...............: avg=22.19-Ás  min=0s       med=0s       max=20.41ms p(90)=0s       p(95)=0s      
+     http_req_duration.................: avg=112.64ms min=6.15ms   med=78.92ms  max=1.39s   p(90)=244.99ms p(95)=329.66ms
+     Ô£ô { endpoint:payments-process }...: avg=108.16ms min=6.75ms   med=75.99ms  max=1.14s   p(90)=230.2ms  p(95)=315.68ms
+       { expected_response:true }......: avg=112.64ms min=6.15ms   med=78.92ms  max=1.39s   p(90)=244.99ms p(95)=329.66ms
+   Ô£ô http_req_failed...................: 0.00%   0 out of 10283
+     http_req_receiving................: avg=1.54ms   min=37.1-Ás   med=210.04-Ás max=68.95ms p(90)=4.11ms   p(95)=8.22ms  
+     http_req_sending..................: avg=203.07-Ás min=18.2-Ás   med=52.61-Ás  max=61.53ms p(90)=180.43-Ás p(95)=374.92-Ás
+     http_req_tls_handshaking..........: avg=0s       min=0s       med=0s       max=0s      p(90)=0s       p(95)=0s      
+     http_req_waiting..................: avg=110.9ms  min=5.75ms   med=77.26ms  max=1.38s   p(90)=242.78ms p(95)=328.47ms
+     http_reqs.........................: 10283   331.891603/s
+     iteration_duration................: avg=443.91ms min=137.01ms med=378.88ms max=2.11s   p(90)=748.51ms p(95)=917.69ms
+     iterations........................: 3427    110.609017/s
+     vus...............................: 50      min=50           max=50
+     vus_max...........................: 50      min=50           max=50
+
+
+running (0m31.0s), 00/50 VUs, 3427 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Redis | Redis | GET /api/recommendations/customers/{id} ===
+docker :  Container ecommerce-redis Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-redis Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-postgres Running 
+ Container ecommerce-app Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-2914d722d00f Creating 
+ Container kafka-microsservices-java-k6-run-2914d722d00f Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/recommendations-read.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 62 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m02.0s), 50/50 VUs, 322 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m03.0s), 50/50 VUs, 582 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m03.9s), 50/50 VUs, 839 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m04.9s), 50/50 VUs, 1131 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.7s/30s
+
+running (0m05.9s), 50/50 VUs, 1430 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m06.9s), 50/50 VUs, 1805 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m08.0s), 50/50 VUs, 2114 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m09.0s), 50/50 VUs, 2353 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m09.9s), 50/50 VUs, 2618 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m10.9s), 50/50 VUs, 2903 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m12.0s), 50/50 VUs, 3151 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m12.9s), 50/50 VUs, 3401 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m14.0s), 50/50 VUs, 3662 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 3934 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m15.9s), 50/50 VUs, 4175 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m17.0s), 50/50 VUs, 4568 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m17.9s), 50/50 VUs, 4913 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m18.9s), 50/50 VUs, 5215 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m19.9s), 50/50 VUs, 5583 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.7s/30s
+
+running (0m20.9s), 50/50 VUs, 6023 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m21.9s), 50/50 VUs, 6428 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m22.9s), 50/50 VUs, 6749 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m23.9s), 50/50 VUs, 7099 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m24.9s), 50/50 VUs, 7542 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m25.9s), 50/50 VUs, 8004 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m26.9s), 50/50 VUs, 8460 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m27.9s), 50/50 VUs, 8880 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m28.9s), 50/50 VUs, 9234 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m29.9s), 50/50 VUs, 9660 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+     Ô£ô recommendations 200
+
+     checks................................: 100.00% 9852 out of 9852
+     data_received.........................: 14 MB   469 kB/s
+     data_sent.............................: 1.4 MB  46 kB/s
+     http_req_blocked......................: avg=90.71-Ás  min=4.8-Ás    med=12.1-Ás   max=39.92ms  p(90)=19-Ás     p(95)=32.94-Ás 
+     http_req_connecting...................: avg=52.91-Ás  min=0s       med=0s       max=39.81ms  p(90)=0s       p(95)=0s      
+     http_req_duration.....................: avg=48.59ms  min=3.28ms   med=32.72ms  max=334.82ms p(90)=113.59ms p(95)=147.5ms 
+     Ô£ô { endpoint:recommendations-read }...: avg=48.57ms  min=3.28ms   med=32.72ms  max=334.82ms p(90)=113.56ms p(95)=147.42ms
+       { expected_response:true }..........: avg=48.59ms  min=3.28ms   med=32.72ms  max=334.82ms p(90)=113.59ms p(95)=147.5ms 
+   Ô£ô http_req_failed.......................: 0.00%   0 out of 9854
+     http_req_receiving....................: avg=1.67ms   min=43.91-Ás  med=265.68-Ás max=133.17ms p(90)=3.15ms   p(95)=8.9ms   
+     http_req_sending......................: avg=114.07-Ás min=13.2-Ás   med=35.57-Ás  max=37.75ms  p(90)=116.24-Ás p(95)=213.15-Ás
+     http_req_tls_handshaking..............: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting......................: avg=46.8ms   min=3.07ms   med=31.15ms  max=334.53ms p(90)=108.92ms p(95)=143.9ms 
+     http_reqs.............................: 9854    324.764642/s
+     iteration_duration....................: avg=152.33ms min=103.99ms med=135.91ms max=446.3ms  p(90)=219.62ms p(95)=255.21ms
+     iterations............................: 9852    324.698727/s
+     vus...................................: 50      min=50           max=50
+     vus_max...............................: 50      min=50           max=50
+
+
+running (0m30.3s), 00/50 VUs, 9852 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Redis | Redis | POST /api/recommendations/.../views ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-06b9fd4cfcf1 Creating 
+ Container kafka-microsservices-java-k6-run-06b9fd4cfcf1 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/recommendations-views.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 127 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.6s/30s
+
+running (0m02.0s), 50/50 VUs, 470 complete and 0 interrupted iterations
+default   [   5% ] 50 VUs  01.6s/30s
+
+running (0m03.0s), 50/50 VUs, 877 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.6s/30s
+
+running (0m04.0s), 50/50 VUs, 1176 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m05.0s), 50/50 VUs, 1482 complete and 0 interrupted iterations
+default   [  15% ] 50 VUs  04.6s/30s
+
+running (0m06.0s), 50/50 VUs, 1815 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m07.0s), 50/50 VUs, 2145 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.6s/30s
+
+running (0m08.0s), 50/50 VUs, 2502 complete and 0 interrupted iterations
+default   [  25% ] 50 VUs  07.6s/30s
+
+running (0m09.0s), 50/50 VUs, 2892 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.6s/30s
+
+running (0m10.0s), 50/50 VUs, 3289 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.6s/30s
+
+running (0m11.0s), 50/50 VUs, 3629 complete and 0 interrupted iterations
+default   [  35% ] 50 VUs  10.6s/30s
+
+running (0m12.0s), 50/50 VUs, 3980 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m13.0s), 50/50 VUs, 4395 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.6s/30s
+
+running (0m14.0s), 50/50 VUs, 4845 complete and 0 interrupted iterations
+default   [  45% ] 50 VUs  13.6s/30s
+
+running (0m15.0s), 50/50 VUs, 5243 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.6s/30s
+
+running (0m16.0s), 50/50 VUs, 5659 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.6s/30s
+
+running (0m17.0s), 50/50 VUs, 6107 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m18.0s), 50/50 VUs, 6549 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.6s/30s
+
+running (0m19.0s), 50/50 VUs, 6993 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.6s/30s
+
+running (0m20.0s), 50/50 VUs, 7347 complete and 0 interrupted iterations
+default   [  65% ] 50 VUs  19.6s/30s
+
+running (0m21.0s), 50/50 VUs, 7728 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.6s/30s
+
+running (0m22.0s), 50/50 VUs, 8121 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.6s/30s
+
+running (0m23.0s), 50/50 VUs, 8568 complete and 0 interrupted iterations
+default   [  75% ] 50 VUs  22.6s/30s
+
+running (0m24.0s), 50/50 VUs, 8979 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.6s/30s
+
+running (0m25.0s), 50/50 VUs, 9351 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.6s/30s
+
+running (0m25.9s), 50/50 VUs, 9674 complete and 0 interrupted iterations
+default   [  85% ] 50 VUs  25.6s/30s
+
+running (0m26.9s), 50/50 VUs, 10051 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.6s/30s
+
+running (0m27.9s), 50/50 VUs, 10497 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.6s/30s
+
+running (0m28.9s), 50/50 VUs, 10976 complete and 0 interrupted iterations
+default   [  95% ] 50 VUs  28.6s/30s
+
+running (0m29.9s), 50/50 VUs, 11424 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.6s/30s
+
+     Ô£ô views 204
+
+     checks.................................: 100.00% 11626 out of 11626
+     data_received..........................: 1.7 MB  55 kB/s
+     data_sent..............................: 2.9 MB  96 kB/s
+     http_req_blocked.......................: avg=52.5-Ás   min=4.5-Ás    med=11.2-Ás   max=33.02ms  p(90)=16.43-Ás  p(95)=23.46-Ás 
+     http_req_connecting....................: avg=23.24-Ás  min=0s       med=0s       max=31.85ms  p(90)=0s       p(95)=0s      
+     http_req_duration......................: avg=26.91ms  min=2.81ms   med=16.36ms  max=290.67ms p(90)=66.14ms  p(95)=83.95ms 
+     Ô£ô { endpoint:recommendations-views }...: avg=26.88ms  min=2.81ms   med=16.36ms  max=187.53ms p(90)=66.13ms  p(95)=83.92ms 
+       { expected_response:true }...........: avg=26.91ms  min=2.81ms   med=16.36ms  max=290.67ms p(90)=66.14ms  p(95)=83.95ms 
+   Ô£ô http_req_failed........................: 0.00%   0 out of 11628
+     http_req_receiving.....................: avg=170.28-Ás min=20.1-Ás   med=79.56-Ás  max=32.96ms  p(90)=200.89-Ás p(95)=346.92-Ás
+     http_req_sending.......................: avg=119.63-Ás min=12.8-Ás   med=42.01-Ás  max=32.54ms  p(90)=131.84-Ás p(95)=208.9-Ás 
+     http_req_tls_handshaking...............: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting.......................: avg=26.62ms  min=2.68ms   med=16.1ms   max=288.81ms p(90)=65.76ms  p(95)=83.48ms 
+     http_reqs..............................: 11628   382.246699/s
+     iteration_duration.....................: avg=129.1ms  min=103.36ms med=118.26ms max=293.47ms p(90)=169.13ms p(95)=187.84ms
+     iterations.............................: 11626   382.180953/s
+     vus....................................: 50      min=50             max=50
+     vus_max................................: 50      min=50             max=50
+
+
+running (0m30.4s), 00/50 VUs, 11626 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+=== Checkout | Postgres | Fluxo: pedido + item + pagamento ===
+docker :  Container ecommerce-app Running 
+No C:\Users\re049905\Desktop\kafka-microsservices-java\load-tests\run-suite.ps1:41 caractere:15
++ ...   $output = docker compose -f $ComposeFile --profile load-test run -- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container ecommerce-app Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container ecommerce-redis Running 
+ Container ecommerce-postgres Running 
+ Container ecommerce-postgres Waiting 
+ Container ecommerce-postgres Healthy 
+ Container kafka-microsservices-java-k6-run-c8e2df99f4e9 Creating 
+ Container kafka-microsservices-java-k6-run-c8e2df99f4e9 Created 
+
+         /\      Grafana   /ÔÇ¥ÔÇ¥/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ÔÇ¥ÔÇ¥\ 
+  /          \   |   (  |  (ÔÇ¥)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/scenarios/checkout-flow.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m0s max duration (incl. graceful stop):
+              * default: 50 looping VUs for 30s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 46 complete and 0 interrupted iterations
+default   [   2% ] 50 VUs  00.7s/30s
+
+running (0m02.0s), 50/50 VUs, 141 complete and 0 interrupted iterations
+default   [   6% ] 50 VUs  01.7s/30s
+
+running (0m03.0s), 50/50 VUs, 292 complete and 0 interrupted iterations
+default   [   9% ] 50 VUs  02.7s/30s
+
+running (0m04.0s), 50/50 VUs, 473 complete and 0 interrupted iterations
+default   [  12% ] 50 VUs  03.7s/30s
+
+running (0m05.0s), 50/50 VUs, 676 complete and 0 interrupted iterations
+default   [  16% ] 50 VUs  04.7s/30s
+
+running (0m06.0s), 50/50 VUs, 791 complete and 0 interrupted iterations
+default   [  19% ] 50 VUs  05.7s/30s
+
+running (0m07.0s), 50/50 VUs, 909 complete and 0 interrupted iterations
+default   [  22% ] 50 VUs  06.7s/30s
+
+running (0m08.0s), 50/50 VUs, 1047 complete and 0 interrupted iterations
+default   [  26% ] 50 VUs  07.7s/30s
+
+running (0m09.0s), 50/50 VUs, 1260 complete and 0 interrupted iterations
+default   [  29% ] 50 VUs  08.7s/30s
+
+running (0m10.0s), 50/50 VUs, 1483 complete and 0 interrupted iterations
+default   [  32% ] 50 VUs  09.7s/30s
+
+running (0m11.0s), 50/50 VUs, 1624 complete and 0 interrupted iterations
+default   [  36% ] 50 VUs  10.7s/30s
+
+running (0m12.0s), 50/50 VUs, 1728 complete and 0 interrupted iterations
+default   [  39% ] 50 VUs  11.7s/30s
+
+running (0m13.0s), 50/50 VUs, 1928 complete and 0 interrupted iterations
+default   [  42% ] 50 VUs  12.7s/30s
+
+running (0m14.0s), 50/50 VUs, 2170 complete and 0 interrupted iterations
+default   [  46% ] 50 VUs  13.7s/30s
+
+running (0m15.0s), 50/50 VUs, 2384 complete and 0 interrupted iterations
+default   [  49% ] 50 VUs  14.7s/30s
+
+running (0m16.0s), 50/50 VUs, 2497 complete and 0 interrupted iterations
+default   [  52% ] 50 VUs  15.7s/30s
+
+running (0m16.9s), 50/50 VUs, 2622 complete and 0 interrupted iterations
+default   [  56% ] 50 VUs  16.7s/30s
+
+running (0m17.9s), 50/50 VUs, 2795 complete and 0 interrupted iterations
+default   [  59% ] 50 VUs  17.7s/30s
+
+running (0m18.9s), 50/50 VUs, 3022 complete and 0 interrupted iterations
+default   [  62% ] 50 VUs  18.7s/30s
+
+running (0m19.9s), 50/50 VUs, 3256 complete and 0 interrupted iterations
+default   [  66% ] 50 VUs  19.7s/30s
+
+running (0m20.9s), 50/50 VUs, 3413 complete and 0 interrupted iterations
+default   [  69% ] 50 VUs  20.7s/30s
+
+running (0m21.9s), 50/50 VUs, 3509 complete and 0 interrupted iterations
+default   [  72% ] 50 VUs  21.7s/30s
+
+running (0m22.9s), 50/50 VUs, 3687 complete and 0 interrupted iterations
+default   [  76% ] 50 VUs  22.7s/30s
+
+running (0m23.9s), 50/50 VUs, 3859 complete and 0 interrupted iterations
+default   [  79% ] 50 VUs  23.7s/30s
+
+running (0m24.9s), 50/50 VUs, 3996 complete and 0 interrupted iterations
+default   [  82% ] 50 VUs  24.7s/30s
+
+running (0m25.9s), 50/50 VUs, 4112 complete and 0 interrupted iterations
+default   [  86% ] 50 VUs  25.7s/30s
+
+running (0m26.9s), 50/50 VUs, 4230 complete and 0 interrupted iterations
+default   [  89% ] 50 VUs  26.7s/30s
+
+running (0m28.0s), 50/50 VUs, 4381 complete and 0 interrupted iterations
+default   [  92% ] 50 VUs  27.7s/30s
+
+running (0m28.9s), 50/50 VUs, 4568 complete and 0 interrupted iterations
+default   [  96% ] 50 VUs  28.7s/30s
+
+running (0m29.9s), 50/50 VUs, 4815 complete and 0 interrupted iterations
+default   [  99% ] 50 VUs  29.7s/30s
+
+     Ô£ô checkout order 201
+     Ô£ô checkout item 200
+     Ô£ô checkout payment 201
+
+     checks.........................: 100.00% 14754 out of 14754
+     data_received..................: 5.7 MB  188 kB/s
+     data_sent......................: 3.4 MB  113 kB/s
+     http_req_blocked...............: avg=86.82-Ás  min=5.5-Ás    med=13.1-Ás   max=67.71ms  p(90)=23.9-Ás   p(95)=51.92-Ás 
+     http_req_connecting............: avg=21.09-Ás  min=0s       med=0s       max=17.86ms  p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=66.76ms  min=5.47ms   med=50.29ms  max=561.66ms p(90)=135.35ms p(95)=170.7ms 
+     Ô£ô { endpoint:checkout }........: avg=66.76ms  min=5.56ms   med=50.29ms  max=561.66ms p(90)=135.31ms p(95)=170.67ms
+       { expected_response:true }...: avg=66.76ms  min=5.47ms   med=50.29ms  max=561.66ms p(90)=135.35ms p(95)=170.7ms 
+   Ô£ô http_req_failed................: 0.00%   0 out of 14756
+     http_req_receiving.............: avg=1.12ms   min=31.31-Ás  med=192.01-Ás max=85.02ms  p(90)=2.84ms   p(95)=5.52ms  
+     http_req_sending...............: avg=187.24-Ás min=18.29-Ás  med=50.92-Ás  max=63.18ms  p(90)=163.81-Ás p(95)=369.72-Ás
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=65.45ms  min=4.23ms   med=49.11ms  max=559.23ms p(90)=133.97ms p(95)=169.05ms
+     http_reqs......................: 14756   483.760158/s
+     iteration_duration.............: avg=306.45ms min=132.67ms med=271.72ms max=884.59ms p(90)=482.06ms p(95)=548.77ms
+     iterations.....................: 4918    161.23153/s
+     vus............................: 50      min=50             max=50
+     vus_max........................: 50      min=50             max=50
+
+
+running (0m30.5s), 00/50 VUs, 4918 complete and 0 interrupted iterations
+default Ô£ô [ 100% ] 50 VUs  30s
+
+
+Modulo   Store    Endpoint                                Reqs  RPS        P95 Falhas Checks 
+------   -----    --------                                ----  ---        --- ------ ------ 
+Auth     Postgres POST /api/auth/login                    556   17.212673  ?   0.00%  100.00%
+Auth     Postgres GET /api/auth/users                     4147  137.383121 ?   0.00%  100.00%
+Product  Postgres GET /api/products                       10124 336.075237 ?   0.00%  100.00%
+Product  Postgres GET /api/products/{id}                  9944  327.236581 ?   0.00%  100.00%
+Customer Postgres GET /api/customers                      9874  327.734314 ?   0.00%  100.00%
+Customer Postgres GET /api/customers/{id}                 12214 402.629226 ?   0.00%  100.00%
+Order    Postgres GET /api/orders/customer/{id}           9738  320.552873 ?   0.00%  100.00%
+Order    Postgres POST /api/orders                        8913  293.355822 ?   0.00%  100.00%
+Order    Postgres POST /api/orders/{id}/items             3059  98.533753  ?   84.99% 14.92% 
+Order    Postgres POST /api/orders/{id}/pay               5954  195.677187 ?   0.00%  100.00%
+Payment  Postgres POST /api/payments                      10283 331.891603 ?   0.00%  100.00%
+Redis    Redis    GET /api/recommendations/customers/{id} 9854  324.764642 ?   0.00%  100.00%
+Redis    Redis    POST /api/recommendations/.../views     11628 382.246699 ?   0.00%  100.00%
+Checkout Postgres Fluxo: pedido + item + pagamento        14756 483.760158 ?   0.00%  100.00%
+
+
+

@@ -3,11 +3,9 @@ package com.ecommerce.config;
 import com.ecommerce.auth.application.usecase.RegisterUserUseCase;
 import com.ecommerce.customer.application.dto.CustomerDTO;
 import com.ecommerce.customer.application.usecase.CreateCustomerUseCase;
-import com.ecommerce.customer.domain.model.Customer;
 import com.ecommerce.customer.domain.repository.CustomerRepository;
 import com.ecommerce.product.application.dto.ProductDTO;
 import com.ecommerce.product.application.usecase.CreateProductUseCase;
-
 import com.ecommerce.product.domain.repository.ProductRepository;
 import com.ecommerce.recommendation.infrastructure.ProductViewGraphRedisStore;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 
-
-/**
- * Seed DEV: LeBron (esporte), Noelle (criada no banco — views manuais via API), Daniel (tech/games).
- * Visualizações gravadas via {@link ProductViewGraphRedisStore#recordView} — mesmo efeito de
- * {@code POST /api/recommendations/customers/{customerId}/views}.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -53,143 +47,107 @@ public class DevSeedData implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            if (customerRepository.findByEmail(LEBRON_EMAIL).isPresent()) {
-                log.info("Seed DEV já existe no banco — sincronizando views no Redis (POST /views)...");
-                seedUsers();
-                seedRedisViews(loadExistingSeedEntities());
-                return;
-            }
-
-            log.info("Executando seed DEV: LeBron (esporte), Noelle (teste manual), Daniel (tech/games)...");
-
-            CustomerDTO lebron = createCustomerUseCase.execute(new CustomerDTO(
-                    null, "LeBron James", LEBRON_EMAIL, "11111111111", null, null, null
-            ));
-            CustomerDTO noelle = createCustomerUseCase.execute(new CustomerDTO(
-                    null, "Noelle", NOELLE_EMAIL, "22222222222", null, null, null
-            ));
-            CustomerDTO daniel = createCustomerUseCase.execute(new CustomerDTO(
-                    null, "Daniel", DANIEL_EMAIL, "33333333333", null, null, null
-            ));
-
-            ProductDTO tenis = createProductUseCase.execute(new ProductDTO(
-                    null, TENIS_NAME, "Tênis de corrida amortecido",
-                    new BigDecimal("599.00"), 20, null, null, null
-            ));
-            ProductDTO bola = createProductUseCase.execute(new ProductDTO(
-                    null, BOLA_NAME, "Bola oficial tamanho 7",
-                    new BigDecimal("189.00"), 30, null, null, null
-            ));
-            ProductDTO camisa = createProductUseCase.execute(new ProductDTO(
-                    null, CAMISA_NAME, "Camisa respirável para treino",
-                    new BigDecimal("129.00"), 40, null, null, null
-            ));
-            ProductDTO notebook = createProductUseCase.execute(new ProductDTO(
-                    null, NOTEBOOK_NAME, "Notebook gamer RTX, 16GB RAM",
-                    new BigDecimal("4500.00"), 10, null, null, null
-            ));
-            ProductDTO mouse = createProductUseCase.execute(new ProductDTO(
-                    null, MOUSE_NAME, "Mouse gamer 25K DPI",
-                    new BigDecimal("450.00"), 25, null, null, null
-            ));
-            ProductDTO teclado = createProductUseCase.execute(new ProductDTO(
-                    null, TECLADO_NAME, "Teclado mecânico switch brown",
-                    new BigDecimal("650.00"), 15, null, null, null
-            ));
-            ProductDTO headset = createProductUseCase.execute(new ProductDTO(
-                    null, HEADSET_NAME, "Headset 7.1 surround",
-                    new BigDecimal("399.00"), 18, null, null, null
-            ));
-
-            seedRedisViews(new SeedEntities(
-                    lebron, noelle, daniel,
-                    tenis, bola, camisa,
-                    notebook, mouse, teclado, headset
-            ));
-
-            seedUsers();
-
-            log.info("Seed DEV concluída. Swagger: http://localhost:8080/swagger-ui.html");
-
+            seed().block(Duration.ofMinutes(2));
         } catch (Exception e) {
             log.error("Erro ao executar seed DEV", e);
         }
     }
 
-    private SeedEntities loadExistingSeedEntities() {
-        Customer lebron = customerRepository.findByEmail(LEBRON_EMAIL).orElseThrow();
-        Customer noelle = customerRepository.findByEmail(NOELLE_EMAIL).orElseThrow();
-        Customer daniel = customerRepository.findByEmail(DANIEL_EMAIL).orElseThrow();
-
-        return new SeedEntities(
-                CustomerDTO.from(lebron),
-                CustomerDTO.from(noelle),
-                CustomerDTO.from(daniel),
-                ProductDTO.from(productRepository.findByName(TENIS_NAME).orElseThrow()),
-                ProductDTO.from(productRepository.findByName(BOLA_NAME).orElseThrow()),
-                ProductDTO.from(productRepository.findByName(CAMISA_NAME).orElseThrow()),
-                ProductDTO.from(productRepository.findByName(NOTEBOOK_NAME).orElseThrow()),
-                ProductDTO.from(productRepository.findByName(MOUSE_NAME).orElseThrow()),
-                ProductDTO.from(productRepository.findByName(TECLADO_NAME).orElseThrow()),
-                ProductDTO.from(productRepository.findByName(HEADSET_NAME).orElseThrow())
-        );
+    private Mono<Void> seed() {
+        return customerRepository.findByEmail(LEBRON_EMAIL)
+                .hasElement()
+                .flatMap(exists -> {
+                    if (exists) {
+                        log.info("Seed DEV já existe no banco — sincronizando views no Redis...");
+                        return seedUsers()
+                                .then(loadExistingSeedEntities())
+                                .flatMap(this::seedRedisViews);
+                    }
+                    log.info("Executando seed DEV: LeBron (esporte), Noelle (teste manual), Daniel (tech/games)...");
+                    return createFreshSeed();
+                });
     }
 
-    /**
-     * Simula chamadas a POST /api/recommendations/customers/{id}/views
-     */
-    private void seedRedisViews(SeedEntities seed) {
-        // LeBron — pesquisou/clicou produtos de esporte
-        recordView(seed.lebron(), seed.tenis(), "LeBron → esporte");
-        recordView(seed.lebron(), seed.bola(), "LeBron → esporte");
-        recordView(seed.lebron(), seed.camisa(), "LeBron → esporte");
+    private Mono<Void> createFreshSeed() {
+        Mono<CustomerDTO> lebron = createCustomerUseCase.execute(new CustomerDTO(
+                null, "LeBron James", LEBRON_EMAIL, "11111111111", null, null, null));
+        Mono<CustomerDTO> noelle = createCustomerUseCase.execute(new CustomerDTO(
+                null, "Noelle", NOELLE_EMAIL, "22222222222", null, null, null));
+        Mono<CustomerDTO> daniel = createCustomerUseCase.execute(new CustomerDTO(
+                null, "Daniel", DANIEL_EMAIL, "33333333333", null, null, null));
 
-        // Daniel — perfil games/tech
-        recordView(seed.daniel(), seed.notebook(), "Daniel → tech");
-        recordView(seed.daniel(), seed.mouse(), "Daniel → tech");
-        recordView(seed.daniel(), seed.teclado(), "Daniel → tech");
-        recordView(seed.daniel(), seed.headset(), "Daniel → tech");
+        Mono<ProductDTO> tenis = createProduct("Tênis de corrida amortecido", TENIS_NAME, "599.00", 20);
+        Mono<ProductDTO> bola = createProduct("Bola oficial tamanho 7", BOLA_NAME, "189.00", 30);
+        Mono<ProductDTO> camisa = createProduct("Camisa respirável para treino", CAMISA_NAME, "129.00", 40);
+        Mono<ProductDTO> notebook = createProduct("Notebook gamer RTX, 16GB RAM", NOTEBOOK_NAME, "4500.00", 10);
+        Mono<ProductDTO> mouse = createProduct("Mouse gamer 25K DPI", MOUSE_NAME, "450.00", 25);
+        Mono<ProductDTO> teclado = createProduct("Teclado mecânico switch brown", TECLADO_NAME, "650.00", 15);
+        Mono<ProductDTO> headset = createProduct("Headset 7.1 surround", HEADSET_NAME, "399.00", 18);
 
-        log.info("--- Personas seed (IDs para Swagger/curl) ---");
-        log.info("LeBron James (esporte): {}", seed.lebron().id());
-        log.info("Noelle (teste manual POST /views): {}", seed.noelle().id());
-        log.info("Daniel (tech/games): {}", seed.daniel().id());
-        log.info("--- Produtos esporte ---");
-        log.info("Tênis: {} | Bola: {} | Camisa: {}",
-                seed.tenis().id(), seed.bola().id(), seed.camisa().id());
-        log.info("--- Produtos tech ---");
-        log.info("Notebook: {} | Mouse: {} | Teclado: {} | Headset: {}",
-                seed.notebook().id(), seed.mouse().id(), seed.teclado().id(), seed.headset().id());
-        log.info("Redis Insight: filtro ecommerce:views:*");
-        log.info("Sugestões LeBron: GET /api/recommendations/customers/{}", seed.lebron().id());
-        log.info("Noelle — registre views manual: POST /api/recommendations/customers/{}/views", seed.noelle().id());
-        log.info("Sugestões Daniel: GET /api/recommendations/customers/{}", seed.daniel().id());
+        return Mono.zip(lebron, noelle, daniel)
+                .flatMap(customers -> Mono.zip(tenis, bola, camisa, notebook, mouse, teclado, headset)
+                        .map(products -> new SeedEntities(
+                                customers.getT1(), customers.getT2(), customers.getT3(),
+                                products.getT1(), products.getT2(), products.getT3(),
+                                products.getT4(), products.getT5(), products.getT6(), products.getT7()))
+                        .flatMap(seed -> seedRedisViews(seed).then(seedUsers())));
     }
 
-    private void seedUsers() {
-        registerUserUseCase.execute(LEBRON_EMAIL, DEV_PASSWORD);
-        registerUserUseCase.execute(NOELLE_EMAIL, DEV_PASSWORD);
-        registerUserUseCase.execute(DANIEL_EMAIL, DEV_PASSWORD);
-        log.info("Usuários DEV (senha '{}'): {}, {}, {}",
-                DEV_PASSWORD, LEBRON_EMAIL, NOELLE_EMAIL, DANIEL_EMAIL);
+    private Mono<ProductDTO> createProduct(String description, String name, String price, int stock) {
+        return createProductUseCase.execute(new ProductDTO(
+                null, name, description, new BigDecimal(price), stock, null, null, null));
     }
 
-    private void recordView(CustomerDTO customer, ProductDTO product, String context) {
-        viewGraphStore.recordView(customer.id(), product.id());
-        log.debug("View registrada [{}]: customer={} product={}", context, customer.id(), product.id());
+    private Mono<SeedEntities> loadExistingSeedEntities() {
+        return Mono.zip(
+                        customerRepository.findByEmail(LEBRON_EMAIL).map(CustomerDTO::from),
+                        customerRepository.findByEmail(NOELLE_EMAIL).map(CustomerDTO::from),
+                        customerRepository.findByEmail(DANIEL_EMAIL).map(CustomerDTO::from)
+                )
+                .flatMap(customers -> Mono.zip(
+                                productRepository.findByName(TENIS_NAME).map(ProductDTO::from),
+                                productRepository.findByName(BOLA_NAME).map(ProductDTO::from),
+                                productRepository.findByName(CAMISA_NAME).map(ProductDTO::from),
+                                productRepository.findByName(NOTEBOOK_NAME).map(ProductDTO::from),
+                                productRepository.findByName(MOUSE_NAME).map(ProductDTO::from),
+                                productRepository.findByName(TECLADO_NAME).map(ProductDTO::from),
+                                productRepository.findByName(HEADSET_NAME).map(ProductDTO::from)
+                        )
+                        .map(products -> new SeedEntities(
+                                customers.getT1(), customers.getT2(), customers.getT3(),
+                                products.getT1(), products.getT2(), products.getT3(),
+                                products.getT4(), products.getT5(), products.getT6(), products.getT7())));
+    }
+
+    private Mono<Void> seedRedisViews(SeedEntities seed) {
+        return viewGraphStore.recordView(seed.lebron().id(), seed.tenis().id())
+                .then(viewGraphStore.recordView(seed.lebron().id(), seed.bola().id()))
+                .then(viewGraphStore.recordView(seed.lebron().id(), seed.camisa().id()))
+                .then(viewGraphStore.recordView(seed.daniel().id(), seed.notebook().id()))
+                .then(viewGraphStore.recordView(seed.daniel().id(), seed.mouse().id()))
+                .then(viewGraphStore.recordView(seed.daniel().id(), seed.teclado().id()))
+                .then(viewGraphStore.recordView(seed.daniel().id(), seed.headset().id()))
+                .doOnSuccess(v -> {
+                    log.info("--- Personas seed (IDs para Swagger/curl) ---");
+                    log.info("LeBron James (esporte): {}", seed.lebron().id());
+                    log.info("Noelle (teste manual POST /views): {}", seed.noelle().id());
+                    log.info("Daniel (tech/games): {}", seed.daniel().id());
+                    log.info("Seed DEV concluída. Swagger: http://localhost:8080/swagger-ui.html");
+                });
+    }
+
+    private Mono<Void> seedUsers() {
+        return registerUserUseCase.execute(LEBRON_EMAIL, DEV_PASSWORD)
+                .then(registerUserUseCase.execute(NOELLE_EMAIL, DEV_PASSWORD))
+                .then(registerUserUseCase.execute(DANIEL_EMAIL, DEV_PASSWORD))
+                .doOnSuccess(v -> log.info("Usuários DEV (senha '{}'): {}, {}, {}",
+                        DEV_PASSWORD, LEBRON_EMAIL, NOELLE_EMAIL, DANIEL_EMAIL));
     }
 
     private record SeedEntities(
-            CustomerDTO lebron,
-            CustomerDTO noelle,
-            CustomerDTO daniel,
-            ProductDTO tenis,
-            ProductDTO bola,
-            ProductDTO camisa,
-            ProductDTO notebook,
-            ProductDTO mouse,
-            ProductDTO teclado,
-            ProductDTO headset
+            CustomerDTO lebron, CustomerDTO noelle, CustomerDTO daniel,
+            ProductDTO tenis, ProductDTO bola, ProductDTO camisa,
+            ProductDTO notebook, ProductDTO mouse, ProductDTO teclado, ProductDTO headset
     ) {
     }
 }

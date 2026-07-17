@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,19 +35,19 @@ public class RecommendationController {
     @Operation(summary = "Sugestões para o cliente",
             description = "Prioriza produtos que outros clientes viram junto com o seu histórico; completa com catálogo se faltar sinal")
     @ApiResponse(responseCode = "200", description = "Lista de sugestões")
-    public ResponseEntity<List<ProductDTO>> getSuggestions(
+    public Flux<ProductDTO> getSuggestions(
             @Parameter(description = "ID do cliente", required = true) @PathVariable UUID customerId) {
-        return ResponseEntity.ok(getPurchaseRecommendationsUseCase.execute(customerId));
+        return getPurchaseRecommendationsUseCase.execute(customerId);
     }
 
     @PostMapping("/customers/{customerId}/views")
     @Operation(summary = "Registrar visualização ou clique",
             description = "Atualiza user:{id}→produtos e product:{id}→usuários no Redis; renova TTL")
     @ApiResponse(responseCode = "204", description = "Registrado")
-    public ResponseEntity<Void> recordView(
+    public Mono<ResponseEntity<Void>> recordView(
             @Parameter(description = "ID do cliente", required = true) @PathVariable UUID customerId,
             @Valid @RequestBody RecordProductViewRequest request) {
-        viewGraphStore.recordView(customerId, request.productId());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return viewGraphStore.recordView(customerId, request.productId())
+                .thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 }

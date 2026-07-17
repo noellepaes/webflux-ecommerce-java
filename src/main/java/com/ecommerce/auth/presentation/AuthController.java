@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,8 +31,8 @@ public class AuthController {
     @GetMapping("/users")
     @Operation(summary = "Listar usuários", description = "Retorna emails e nomes dos usuários cadastrados")
     @ApiResponse(responseCode = "200", description = "Lista de usuários")
-    public ResponseEntity<List<UserSummaryDTO>> listUsers() {
-        return ResponseEntity.ok(listUsersUseCase.execute());
+    public Flux<UserSummaryDTO> listUsers() {
+        return listUsersUseCase.execute();
     }
 
     @PostMapping("/login")
@@ -41,7 +41,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Login realizado"),
             @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     })
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(loginUseCase.execute(request));
+    public Mono<ResponseEntity<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+        return loginUseCase.execute(request).map(ResponseEntity::ok);
     }
 }

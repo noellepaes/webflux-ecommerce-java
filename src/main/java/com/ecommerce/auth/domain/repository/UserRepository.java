@@ -1,20 +1,20 @@
 package com.ecommerce.auth.domain.repository;
 
 import com.ecommerce.auth.domain.model.User;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
 
-    User save(User user);
+    Mono<User> save(User user);
 
-    List<User> findAll();
+    Flux<User> findAll();
 
-    Optional<User> findByEmail(String email);
+    Mono<User> findByEmail(String email);
 
-    Optional<User> findById(UUID id);
+    Mono<User> findById(UUID id);
 
-    boolean existsByEmail(String email);
+    Mono<Boolean> existsByEmail(String email);
 }

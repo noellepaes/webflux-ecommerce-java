@@ -1,34 +1,31 @@
 package com.ecommerce.customer.application.usecase;
 
 import com.ecommerce.customer.application.dto.CustomerDTO;
-import com.ecommerce.customer.domain.model.Customer;
 import com.ecommerce.customer.domain.repository.CustomerRepository;
 import com.ecommerce.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GetCustomerUseCase {
-    
+
     private final CustomerRepository repository;
-    
+
     @Transactional(readOnly = true)
-    public CustomerDTO findById(UUID id) {
-        Customer customer = repository.findById(id)
-                .orElseThrow(() -> new BusinessException("Cliente não encontrado"));
-        return CustomerDTO.from(customer);
-    }
-    
-    @Transactional(readOnly = true)
-    public List<CustomerDTO> findAll() {
-        return repository.findAll().stream()
+    public Mono<CustomerDTO> findById(UUID id) {
+        return repository.findById(id)
                 .map(CustomerDTO::from)
-                .collect(Collectors.toList());
+                .switchIfEmpty(Mono.error(new BusinessException("Cliente não encontrado")));
+    }
+
+    @Transactional(readOnly = true)
+    public Flux<CustomerDTO> findAll() {
+        return repository.findAll().map(CustomerDTO::from);
     }
 }

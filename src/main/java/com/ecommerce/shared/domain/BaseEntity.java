@@ -1,31 +1,41 @@
 package com.ecommerce.shared.domain;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseEntity {
-    
+public abstract class BaseEntity implements Persistable<UUID> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+
+    @Column("created_at")
     private LocalDateTime createdAt;
-    
-    @UpdateTimestamp
-    @Column(name = "updated_at")
+
+    @Column("updated_at")
     private LocalDateTime updatedAt;
-    
+
     @Version
     private Long version;
+
+    @Transient
+    private boolean newEntity = true;
+
+    @Override
+    public boolean isNew() {
+        return newEntity;
+    }
+
+    public void markNotNew() {
+        this.newEntity = false;
+    }
 }

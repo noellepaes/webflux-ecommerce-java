@@ -1,41 +1,36 @@
 package com.ecommerce.order.application.usecase;
 
 import com.ecommerce.order.application.dto.OrderDTO;
-import com.ecommerce.order.domain.model.Order;
 import com.ecommerce.order.domain.repository.OrderRepository;
 import com.ecommerce.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GetOrderUseCase {
-    
+
     private final OrderRepository repository;
-    
+
     @Transactional(readOnly = true)
-    public OrderDTO findById(UUID id) {
-        Order order = repository.findById(id)
-                .orElseThrow(() -> new BusinessException("Pedido não encontrado"));
-        return OrderDTO.from(order);
-    }
-    
-    @Transactional(readOnly = true)
-    public List<OrderDTO> findByCustomerId(UUID customerId) {
-        return repository.findByCustomerId(customerId).stream()
+    public Mono<OrderDTO> findById(UUID id) {
+        return repository.findById(id)
                 .map(OrderDTO::from)
-                .collect(Collectors.toList());
+                .switchIfEmpty(Mono.error(new BusinessException("Pedido não encontrado")));
     }
 
     @Transactional(readOnly = true)
-    public List<OrderDTO> findAll() {
-        return repository.findAll().stream()
-                .map(OrderDTO::from)
-                .collect(Collectors.toList());
+    public Flux<OrderDTO> findByCustomerId(UUID customerId) {
+        return repository.findByCustomerId(customerId).map(OrderDTO::from);
+    }
+
+    @Transactional(readOnly = true)
+    public Flux<OrderDTO> findAll() {
+        return repository.findAll().map(OrderDTO::from);
     }
 }

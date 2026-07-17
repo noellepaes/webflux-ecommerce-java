@@ -2,49 +2,34 @@ spring:
   application:
     name: ecommerce-monolith
 
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/ecommerce
+    username: ecommerce
+    password: ecommerce
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ecommerce
     username: ecommerce
     password: ecommerce
     driver-class-name: org.postgresql.Driver
-  
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        # Schema padrão usado quando nenhum profile específico está ativo
-        default_schema: public
-  
+
   flyway:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration/v1
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    user: ecommerce
+    password: ecommerce
 
   data:
     redis:
       host: localhost
       port: 6379
 
-# Recomendações (Redis) — valores obrigatórios; a app não sobe se faltar algum
 app:
   recommendation:
     customer-history-ttl: 30d
     suggestion-limit: 5
-
-server:
-  tomcat:
-    mbeanregistry:
-      enabled: true
 
 management:
   endpoints:
@@ -61,7 +46,6 @@ management:
     probe-interval-ms: 30000
     enable:
       jvm: true
-      tomcat: true
       process: true
     tags:
       application: ${spring.application.name}
@@ -87,63 +71,14 @@ management:
       export:
         enabled: true
   health:
-    db:
+    r2dbc:
       enabled: true
     redis:
       enabled: true
 
-# SpringDoc OpenAPI (Swagger) Configuration
 springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-
----
-# Profile para módulo Product
-spring:
-  config:
-    activate:
-      on-profile: product
-  
-  jpa:
-    properties:
-      hibernate:
-        default_schema: product_schema
-
----
-# Profile para módulo Customer
-spring:
-  config:
-    activate:
-      on-profile: customer
-  
-  jpa:
-    properties:
-      hibernate:
-        default_schema: customer_schema
-
----
-# Profile para módulo Order
-spring:
-  config:
-    activate:
-      on-profile: order
-  
-  jpa:
-    properties:
-      hibernate:
-        default_schema: order_schema
-
----
-# Profile para módulo Payment
-spring:
-  config:
-    activate:
-      on-profile: payment
-  
-  jpa:
-    properties:
-      hibernate:
-        default_schema: payment_schema

@@ -8,15 +8,15 @@ import com.ecommerce.recommendation.config.RecommendationProperties;
 import com.ecommerce.recommendation.infrastructure.ProductViewGraphRedisStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -26,83 +26,62 @@ public class GetPurchaseRecommendationsUseCase {
     private final ProductViewGraphRedisStore viewGraphStore;
     private final RecommendationProperties recommendationProperties;
 
-    /**
-     * Recomendação colaborativa leve: “quem viu os mesmos produtos que você também viu X”.
-     * Candidatos recebem score pela frequência entre os vizinhos (co-visualizadores).
-     * Se não houver sinal no Redis, cai no preenchimento com catálogo disponível fora do histórico do usuário.
-     */
-    public List<ProductDTO> execute(UUID customerId) {
-        Set<UUID> userViews = viewGraphStore.getUserViewedProductIds(customerId);
+    public Flux<ProductDTO> execute(UUID customerId) {
         int limit = recommendationProperties.suggestionLimit();
 
-        Map<UUID, Integer> scores = collaborativeScores(customerId, userViews);
-        List<UUID> rankedCandidateIds = scores.entrySet().stream()
-                .sorted(Map.Entry.<UUID, Integer>comparingByValue(Comparator.reverseOrder()))
-                .map(Map.Entry::getKey)
-                .toList();
+        return viewGraphStore.getUserViewedProductIds(customerId)
+                .collect(HashSet::new, Set::add)
+                .flatMapMany(userViews -> collaborativeScores(customerId, userViews)
+                        .flatMapMany(scores -> {
+                            Flux<UUID> ranked = Flux.fromIterable(scores.entrySet())
+                                    .sort(Map.Entry.<UUID, Integer>comparingByValue(Comparator.reverseOrder()))
+                                    .map(Map.Entry::getKey);
 
-        List<ProductDTO> result = new ArrayList<>();
-        Set<UUID> already = new HashSet<>(userViews);
+                            Set<UUID> already = new HashSet<>(userViews);
 
-        for (UUID productId : rankedCandidateIds) {
-            if (result.size() >= limit) {
-                break;
-            }
-            if (already.contains(productId)) {
-                continue;
-            }
-            productRepository.findById(productId)
-                    .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
-                    .filter(Product::isAvailable)
-                    .map(ProductDTO::from)
-                    .ifPresent(dto -> {
-                        result.add(dto);
-                        already.add(productId);
-                    });
-        }
-
-        if (result.size() < limit) {
-            fillFromCatalogExcluding(already, limit - result.size(), result);
-        }
-
-        return result;
+                            return ranked
+                                    .filter(id -> !already.contains(id))
+                                    .concatMap(productId -> productRepository.findById(productId)
+                                            .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
+                                            .filter(Product::isAvailable)
+                                            .map(ProductDTO::from)
+                                            .doOnNext(dto -> already.add(dto.id())))
+                                    .take(limit)
+                                    .collectList()
+                                    .flatMapMany(result -> {
+                                        if (result.size() >= limit) {
+                                            return Flux.fromIterable(result);
+                                        }
+                                        return Flux.fromIterable(result)
+                                                .concatWith(fillFromCatalogExcluding(already, limit - result.size()));
+                                    });
+                        }));
     }
 
-    private Map<UUID, Integer> collaborativeScores(UUID customerId, Set<UUID> userViews) {
-        Map<UUID, Integer> scores = new HashMap<>();
+    private Mono<Map<UUID, Integer>> collaborativeScores(UUID customerId, Set<UUID> userViews) {
         if (userViews.isEmpty()) {
-            return scores;
+            return Mono.just(Map.of());
         }
-        for (UUID viewedProductId : userViews) {
-            Set<UUID> viewers = viewGraphStore.getProductViewerIds(viewedProductId);
-            for (UUID peerCustomerId : viewers) {
-                if (peerCustomerId.equals(customerId)) {
-                    continue;
-                }
-                Set<UUID> peerViews = viewGraphStore.getUserViewedProductIds(peerCustomerId);
-                for (UUID candidateId : peerViews) {
-                    if (userViews.contains(candidateId)) {
-                        continue;
-                    }
-                    scores.merge(candidateId, 1, Integer::sum);
-                }
-            }
-        }
-        return scores;
+
+        Map<UUID, Integer> scores = new ConcurrentHashMap<>();
+
+        return Flux.fromIterable(userViews)
+                .flatMap(viewedProductId -> viewGraphStore.getProductViewerIds(viewedProductId)
+                        .filter(peerId -> !peerId.equals(customerId))
+                        .flatMap(peerCustomerId -> viewGraphStore.getUserViewedProductIds(peerCustomerId)
+                                .filter(candidateId -> !userViews.contains(candidateId))
+                                .doOnNext(candidateId -> scores.merge(candidateId, 1, Integer::sum))))
+                .then(Mono.just(scores));
     }
 
-    private void fillFromCatalogExcluding(Set<UUID> excludeIds, int need, List<ProductDTO> into) {
+    private Flux<ProductDTO> fillFromCatalogExcluding(Set<UUID> excludeIds, int need) {
         if (need <= 0) {
-            return;
+            return Flux.empty();
         }
-        productRepository.findByStatus(ProductStatus.ACTIVE).stream()
+        return productRepository.findByStatus(ProductStatus.ACTIVE)
                 .filter(Product::isAvailable)
                 .filter(p -> !excludeIds.contains(p.getId()))
-                .limit(need)
-                .map(ProductDTO::from)
-                .forEach(dto -> {
-                    into.add(dto);
-                    excludeIds.add(dto.id());
-                });
+                .take(need)
+                .map(ProductDTO::from);
     }
 }

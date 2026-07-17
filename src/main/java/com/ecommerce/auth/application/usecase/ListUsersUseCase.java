@@ -6,8 +6,7 @@ import com.ecommerce.customer.domain.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @Service
 @RequiredArgsConstructor
@@ -17,11 +16,10 @@ public class ListUsersUseCase {
     private final CustomerRepository customerRepository;
 
     @Transactional(readOnly = true)
-    public List<UserSummaryDTO> execute() {
-        return userRepository.findAll().stream()
-                .map(user -> customerRepository.findByEmail(user.getEmail())
+    public Flux<UserSummaryDTO> execute() {
+        return userRepository.findAll()
+                .flatMap(user -> customerRepository.findByEmail(user.getEmail())
                         .map(customer -> new UserSummaryDTO(user.getEmail(), customer.getName()))
-                        .orElse(new UserSummaryDTO(user.getEmail(), user.getEmail())))
-                .toList();
+                        .defaultIfEmpty(new UserSummaryDTO(user.getEmail(), user.getEmail())));
     }
 }

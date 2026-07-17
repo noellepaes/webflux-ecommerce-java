@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 @RequiredArgsConstructor
@@ -15,15 +17,22 @@ public class RegisterUserUseCase {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void execute(String email, String rawPassword) {
+    public Mono<Void> execute(String email, String rawPassword) {
         String normalizedEmail = email.trim().toLowerCase();
-        if (userRepository.existsByEmail(normalizedEmail)) {
-            return;
-        }
-
-        User user = new User();
-        user.setEmail(normalizedEmail);
-        user.setPasswordHash(passwordEncoder.encode(rawPassword));
-        userRepository.save(user);
+        return userRepository.existsByEmail(normalizedEmail)
+                .flatMap(exists -> {
+                    if (Boolean.TRUE.equals(exists)) {
+                        return Mono.empty();
+                    }
+                    return Mono.fromCallable(() -> passwordEncoder.encode(rawPassword))
+                            .subscribeOn(Schedulers.boundedElastic())
+                            .flatMap(hash -> {
+                                User user = new User();
+                                user.setEmail(normalizedEmail);
+                                user.setPasswordHash(hash);
+                                return userRepository.save(user);
+                            })
+                            .then();
+                });
     }
 }

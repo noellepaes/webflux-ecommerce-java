@@ -1,34 +1,31 @@
 package com.ecommerce.product.application.usecase;
 
 import com.ecommerce.product.application.dto.ProductDTO;
-import com.ecommerce.product.domain.model.Product;
 import com.ecommerce.product.domain.repository.ProductRepository;
 import com.ecommerce.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GetProductUseCase {
-    
+
     private final ProductRepository repository;
-    
+
     @Transactional(readOnly = true)
-    public ProductDTO findById(UUID id) {
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new BusinessException("Produto não encontrado"));
-        return ProductDTO.from(product);
-    }
-    
-    @Transactional(readOnly = true)
-    public List<ProductDTO> findAll() {
-        return repository.findAll().stream()
+    public Mono<ProductDTO> findById(UUID id) {
+        return repository.findById(id)
                 .map(ProductDTO::from)
-                .collect(Collectors.toList());
+                .switchIfEmpty(Mono.error(new BusinessException("Produto não encontrado")));
+    }
+
+    @Transactional(readOnly = true)
+    public Flux<ProductDTO> findAll() {
+        return repository.findAll().map(ProductDTO::from);
     }
 }

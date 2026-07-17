@@ -1,42 +1,54 @@
 package com.ecommerce.order.domain.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Entity
-@Table(name = "order_items", schema = "order_schema")
+@Table(schema = "order_schema", name = "order_items")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItem {
-    
+public class OrderItem implements Persistable<UUID> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
-    
-    @Column(nullable = false)
+
+    @Column("order_id")
+    private UUID orderId;
+
+    @Column("product_id")
     private UUID productId;
-    
-    @Column(nullable = false)
+
+    @Column("product_name")
     private String productName;
-    
-    @Column(nullable = false)
+
     private Integer quantity;
-    
-    @Column(nullable = false, precision = 10, scale = 2)
+
+    @Column("unit_price")
     private BigDecimal unitPrice;
-    
+
+    @Transient
+    private boolean newEntity = true;
+
+    @Override
+    public boolean isNew() {
+        return newEntity;
+    }
+
+    public void markNotNew() {
+        this.newEntity = false;
+    }
+
     public BigDecimal getSubtotal() {
         return unitPrice.multiply(BigDecimal.valueOf(quantity));
     }

@@ -2,59 +2,55 @@ package com.ecommerce.order.domain.model;
 
 import com.ecommerce.order.domain.exception.OrderException;
 import com.ecommerce.shared.domain.BaseEntity;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "orders", schema = "order_schema")
+@Table(schema = "order_schema", name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order extends BaseEntity {
-    
-    @Column(nullable = false)
+
+    @Column("customer_id")
     private UUID customerId;
-    
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @Transient
     private List<OrderItem> items = new ArrayList<>();
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+
     private OrderStatus status = OrderStatus.PENDING;
-    
-    @Column(nullable = false, precision = 10, scale = 2)
+
+    @Column("total_amount")
     private BigDecimal totalAmount = BigDecimal.ZERO;
-    
-    // Regras de negócio no domínio - Aggregate Root
+
     public void addItem(OrderItem item) {
-        item.setOrder(this);
+        item.setOrderId(this.getId());
         this.items.add(item);
         calculateTotal();
     }
-    
+
     public void removeItem(OrderItem item) {
         this.items.remove(item);
-        item.setOrder(null);
+        item.setOrderId(null);
         calculateTotal();
     }
-    
+
     private void calculateTotal() {
         this.totalAmount = items.stream()
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    
-    // Regra: Só pode ir de PENDING → PAID
-    // Nunca pode ir de CANCELLED → PAID
+
     public void pay() {
         if (this.status != OrderStatus.PENDING) {
             throw new OrderException(
@@ -63,7 +59,7 @@ public class Order extends BaseEntity {
         }
         this.status = OrderStatus.PAID;
     }
-    
+
     public void cancel() {
         if (this.status == OrderStatus.PAID) {
             throw new OrderException("Pedido pago não pode ser cancelado");
@@ -73,7 +69,7 @@ public class Order extends BaseEntity {
         }
         this.status = OrderStatus.CANCELLED;
     }
-    
+
     public void confirm() {
         if (this.status != OrderStatus.PENDING) {
             throw new OrderException("Apenas pedidos PENDING podem ser confirmados");

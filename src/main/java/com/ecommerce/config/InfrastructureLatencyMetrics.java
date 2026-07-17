@@ -7,33 +7,25 @@ import io.micrometer.core.instrument.Timer;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.redis.connection.ReactiveRedisConnection;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.Statement;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Métricas de infraestrutura no estilo Micrometer:
- * <ul>
- *   <li>{@link Gauge} + callback — valor lido no scrape (disponível, última latência)</li>
- *   <li>{@link Counter} — total de probes com sucesso/falha (só cresce)</li>
- *   <li>{@link Timer} — histograma de latência (no Prometheus vira _bucket/_sum/_count)</li>
- * </ul>
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class InfrastructureLatencyMetrics {
 
-    private final DataSource dataSource;
-    private final StringRedisTemplate redisTemplate;
+    private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final ReactiveRedisConnectionFactory redisConnectionFactory;
     private final MeterRegistry meterRegistry;
 
     private final AtomicBoolean postgresAvailable = new AtomicBoolean(false);
@@ -88,13 +80,8 @@ public class InfrastructureLatencyMetrics {
                 .description("Probes Redis com falha")
                 .register(meterRegistry);
 
-        postgresPingTimer = buildPingTimer(
-                "app.postgres.ping",
-                "Histograma de latência dos probes PostgreSQL");
-
-        redisPingTimer = buildPingTimer(
-                "app.redis.ping",
-                "Histograma de latência dos probes Redis");
+        postgresPingTimer = buildPingTimer("app.postgres.ping", "Histograma de latência dos probes PostgreSQL");
+        redisPingTimer = buildPingTimer("app.redis.ping", "Histograma de latência dos probes Redis");
     }
 
     private Timer buildPingTimer(String name, String description) {
@@ -113,32 +100,38 @@ public class InfrastructureLatencyMetrics {
 
     private void probePostgres() {
         long start = System.nanoTime();
-        boolean ok = false;
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute("SELECT 1");
-            ok = true;
+        try {
+            Integer result = r2dbcEntityTemplate.getDatabaseClient()
+                    .sql("SELECT 1")
+                    .map((row, meta) -> row.get(0, Integer.class))
+                    .one()
+                    .block(Duration.ofSeconds(2));
+            boolean ok = result != null;
+            recordPostgres(ok, System.nanoTime() - start);
         } catch (Exception e) {
             log.warn("Probe PostgreSQL falhou: {}", e.getMessage());
+            recordPostgres(false, System.nanoTime() - start);
         }
-        long elapsed = System.nanoTime() - start;
-        recordPostgres(ok, elapsed);
     }
 
     private void probeRedis() {
         long start = System.nanoTime();
-        boolean ok = false;
         try {
-            String pong = redisTemplate.execute((RedisCallback<String>) connection -> connection.ping());
-            ok = pong != null && "PONG".equalsIgnoreCase(pong);
-            if (!ok) {
-                log.warn("Probe Redis resposta inesperada: {}", pong);
+            Boolean ok = Mono.usingWhen(
+                    Mono.fromSupplier(redisConnectionFactory::getReactiveConnection),
+                    connection -> connection.ping()
+                            .map(pong -> pong != null && "PONG".equalsIgnoreCase(pong))
+                            .defaultIfEmpty(false),
+                    ReactiveRedisConnection::closeLater
+            ).block(Duration.ofSeconds(2));
+            if (!Boolean.TRUE.equals(ok)) {
+                log.warn("Probe Redis resposta inesperada");
             }
+            recordRedis(Boolean.TRUE.equals(ok), System.nanoTime() - start);
         } catch (Exception e) {
             log.warn("Probe Redis falhou: {}", e.getMessage());
+            recordRedis(false, System.nanoTime() - start);
         }
-        long elapsed = System.nanoTime() - start;
-        recordRedis(ok, elapsed);
     }
 
     private void recordPostgres(boolean ok, long elapsedNanos) {
