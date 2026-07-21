@@ -253,6 +253,7 @@ Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](
 3. **CF vs WebFlux** — CF improves *selected* parallel I/O paths inside MVC. WebFlux changes the **server concurrency model** for every endpoint.
 4. **Cost** — Fewer threads → less RAM per concurrent client → often **cheaper instances / higher density**, not cheaper CPU per request.
 
+<img width="519" height="310" alt="Image" src="https://github.com/user-attachments/assets/39ec39a9-614f-4dfe-8dc2-34107f9fe223" />
 ---
 
 ## What changed vs MVC/JPA
