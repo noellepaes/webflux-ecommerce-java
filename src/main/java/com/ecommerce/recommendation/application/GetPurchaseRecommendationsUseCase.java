@@ -11,16 +11,28 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+/**
+ * Recomendações colaborativas.
+ * Hidratação Postgres em batch ({@code findByIdIn}) — equivalente reativo a EntityGraph/IN,
+ * em vez de {@code concatMap(findById)} por candidato.
+ */
 @Service
 @RequiredArgsConstructor
 public class GetPurchaseRecommendationsUseCase {
+
+    private static final int REDIS_FANOUT_CONCURRENCY = 16;
 
     private final ProductRepository productRepository;
     private final ProductViewGraphRedisStore viewGraphStore;
@@ -34,29 +46,57 @@ public class GetPurchaseRecommendationsUseCase {
                 .map(list -> (Set<UUID>) new HashSet<>(list))
                 .flatMapMany(userViews -> collaborativeScores(customerId, userViews)
                         .flatMapMany(scores -> {
-                            Flux<UUID> ranked = Flux.fromIterable(scores.entrySet())
-                                    .sort(Map.Entry.<UUID, Integer>comparingByValue(Comparator.reverseOrder()))
-                                    .map(Map.Entry::getKey);
+                            List<UUID> rankedIds = scores.entrySet().stream()
+                                    .sorted(Map.Entry.<UUID, Integer>comparingByValue(Comparator.reverseOrder()))
+                                    .map(Map.Entry::getKey)
+                                    .filter(id -> !userViews.contains(id))
+                                    .toList();
 
-                            Set<UUID> already = new HashSet<>(userViews);
-
-                            return ranked
-                                    .filter(id -> !already.contains(id))
-                                    .concatMap(productId -> productRepository.findById(productId)
-                                            .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
-                                            .filter(Product::isAvailable)
-                                            .map(ProductDTO::from)
-                                            .doOnNext(dto -> already.add(dto.id())))
-                                    .take(limit)
+                            Set<UUID> exclude = new HashSet<>(userViews);
+                            return hydrateRanked(rankedIds, limit, exclude)
                                     .collectList()
                                     .flatMapMany(result -> {
                                         if (result.size() >= limit) {
-                                            return Flux.fromIterable(result);
+                                            return Flux.fromIterable(result).limitRate(64);
                                         }
+                                        exclude.addAll(result.stream().map(ProductDTO::id).toList());
                                         return Flux.fromIterable(result)
-                                                .concatWith(fillFromCatalogExcluding(already, limit - result.size()));
+                                                .concatWith(fillFromCatalogExcluding(exclude, limit - result.size()))
+                                                .limitRate(64);
                                     });
                         }));
+    }
+
+    private Flux<ProductDTO> hydrateRanked(List<UUID> rankedIds, int limit, Set<UUID> exclude) {
+        if (rankedIds.isEmpty() || limit <= 0) {
+            return Flux.empty();
+        }
+        // Pega um buffer maior que o limit (produtos inativos/filtrados) e filtra em 1 query IN
+        List<UUID> candidates = rankedIds.stream()
+                .filter(id -> !exclude.contains(id))
+                .limit(Math.max(limit * 3L, limit))
+                .toList();
+        if (candidates.isEmpty()) {
+            return Flux.empty();
+        }
+
+        return productRepository.findByIdIn(candidates)
+                .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
+                .filter(Product::isAvailable)
+                .collect(Collectors.toMap(Product::getId, Function.identity(), (a, b) -> a, LinkedHashMap::new))
+                .flatMapMany(byId -> {
+                    List<ProductDTO> ordered = new ArrayList<>();
+                    for (UUID id : candidates) {
+                        Product product = byId.get(id);
+                        if (product != null) {
+                            ordered.add(ProductDTO.from(product));
+                            if (ordered.size() >= limit) {
+                                break;
+                            }
+                        }
+                    }
+                    return Flux.fromIterable(ordered);
+                });
     }
 
     private Mono<Map<UUID, Integer>> collaborativeScores(UUID customerId, Set<UUID> userViews) {
@@ -71,7 +111,9 @@ public class GetPurchaseRecommendationsUseCase {
                         .filter(peerId -> !peerId.equals(customerId))
                         .flatMap(peerCustomerId -> viewGraphStore.getUserViewedProductIds(peerCustomerId)
                                 .filter(candidateId -> !userViews.contains(candidateId))
-                                .doOnNext(candidateId -> scores.merge(candidateId, 1, Integer::sum))))
+                                .doOnNext(candidateId -> scores.merge(candidateId, 1, Integer::sum)),
+                                REDIS_FANOUT_CONCURRENCY),
+                        REDIS_FANOUT_CONCURRENCY)
                 .then(Mono.just(scores));
     }
 

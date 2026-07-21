@@ -1,7 +1,5 @@
 package com.ecommerce.recommendation.presentation;
 
-import com.ecommerce.product.application.dto.ProductDTO;
-import com.ecommerce.recommendation.application.GetPurchaseRecommendationsUseCase;
 import com.ecommerce.recommendation.infrastructure.ProductViewGraphRedisStore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,34 +9,26 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+/**
+ * Writes de views. O GET de sugestões fica no roteamento funcional
+ * ({@link RecommendationRouterConfig} + {@link RecommendationReadHandler}).
+ */
 @RestController
 @RequestMapping("/api/recommendations")
 @RequiredArgsConstructor
-@Tag(name = "Recomendações", description = "Visualizações em Redis (SETs bidirecionais) e sugestões colaborativas; TTL configurável")
+@Tag(name = "Recomendações", description = "POST views; GET sugestões via RouterFunction")
 public class RecommendationController {
 
-    private final GetPurchaseRecommendationsUseCase getPurchaseRecommendationsUseCase;
     private final ProductViewGraphRedisStore viewGraphStore;
-
-    @GetMapping("/customers/{customerId}")
-    @Operation(summary = "Sugestões para o cliente",
-            description = "Prioriza produtos que outros clientes viram junto com o seu histórico; completa com catálogo se faltar sinal")
-    @ApiResponse(responseCode = "200", description = "Lista de sugestões")
-    public Flux<ProductDTO> getSuggestions(
-            @Parameter(description = "ID do cliente", required = true) @PathVariable UUID customerId) {
-        return getPurchaseRecommendationsUseCase.execute(customerId);
-    }
 
     @PostMapping("/customers/{customerId}/views")
     @Operation(summary = "Registrar visualização ou clique",

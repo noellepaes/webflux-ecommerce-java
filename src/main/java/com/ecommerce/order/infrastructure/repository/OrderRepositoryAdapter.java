@@ -10,8 +10,14 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+/**
+ * R2DBC não tem {@code @EntityGraph}. O equivalente para listagens é:
+ * 1 query de orders + 1 query {@code items WHERE order_id IN (...)}.
+ */
 @Component
 @RequiredArgsConstructor
 public class OrderRepositoryAdapter implements OrderRepository {
@@ -50,13 +56,15 @@ public class OrderRepositoryAdapter implements OrderRepository {
     @Override
     public Flux<Order> findByCustomerId(UUID customerId) {
         return orderEntityRepository.findByCustomerId(customerId)
-                .flatMap(this::attachItems);
+                .collectList()
+                .flatMapMany(this::attachItemsBatch);
     }
 
     @Override
     public Flux<Order> findAll() {
         return orderEntityRepository.findAll()
-                .flatMap(this::attachItems);
+                .collectList()
+                .flatMapMany(this::attachItemsBatch);
     }
 
     private Mono<Order> attachItems(Order order) {
@@ -67,6 +75,30 @@ public class OrderRepositoryAdapter implements OrderRepository {
                 .map(items -> {
                     order.setItems(items);
                     return order;
+                });
+    }
+
+    private Flux<Order> attachItemsBatch(List<Order> orders) {
+        if (orders.isEmpty()) {
+            return Flux.empty();
+        }
+        List<UUID> orderIds = orders.stream().map(Order::getId).toList();
+        final int chunkSize = 500;
+
+        return Flux.fromIterable(orderIds)
+                .buffer(chunkSize)
+                .concatMap(chunk -> orderItemRepository.findByOrderIdIn(chunk)
+                        .doOnNext(OrderItem::markNotNew))
+                .collectList()
+                .defaultIfEmpty(List.of())
+                .flatMapMany(items -> {
+                    Map<UUID, List<OrderItem>> byOrder = items.stream()
+                            .collect(Collectors.groupingBy(OrderItem::getOrderId));
+                    for (Order order : orders) {
+                        List<OrderItem> orderItems = byOrder.getOrDefault(order.getId(), List.of());
+                        order.setItems(new ArrayList<>(orderItems));
+                    }
+                    return Flux.fromIterable(orders);
                 });
     }
 }

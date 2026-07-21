@@ -23,7 +23,7 @@ public record OrderDTO(
         return new OrderDTO(
                 order.getId(),
                 order.getCustomerId(),
-                order.getItems().stream()
+                order.getItems() == null ? List.of() : order.getItems().stream()
                         .map(OrderItemDTO::from)
                         .collect(Collectors.toList()),
                 order.getStatus(),

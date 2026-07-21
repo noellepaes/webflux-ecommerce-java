@@ -120,7 +120,7 @@ Results kept as **compact summaries** under `load-tests/results/` (full k6 dumps
 
 ## Product reads — 3 mudanças cirúrgicas (artigo WebFlux)
 
-Aplicadas só em `GET /api/products` e `GET /api/products/{id}` (auth ignorado por enquanto).
+Aplicadas em `GET /api/products` e `GET /api/products/{id}` (auth ignorado por enquanto).
 
 | # | Mudança | Onde |
 |---|---------|------|
@@ -130,7 +130,7 @@ Aplicadas só em `GET /api/products` e `GET /api/products/{id}` (auth ignorado p
 
 Writes (`POST`/`PUT`/`decrease-stock`) continuam em `ProductController`.
 
-### Benchmark (50 VUs · pause 0.1 · Docker Compose · app quente)
+### Benchmark products (50 VUs · pause 0.1 · Docker Compose · app quente)
 
 | Endpoint | Antes (`suite-20260720`) | Depois (2026-07-21) | Delta |
 |----------|--------------------------|---------------------|-------|
@@ -151,6 +151,21 @@ RouterFunction --> ProductReadHandler --> GetProductUseCase --> R2DBC (Flux/Mono
 
 ---
 
+## Orders + recommendations — batch (equivalente ao EntityGraph)
+
+R2DBC **não tem** `@EntityGraph`. O equivalente é **1 query de pais + 1 query `IN` dos filhos** (ou `findByIdIn` no catálogo).
+
+| Endpoint | Antes | Depois (código) | Medido @ 50 VU (2026-07-21)* |
+|----------|-------|-----------------|------------------------------|
+| `GET /api/orders/customer/{id}` | N+1: `attachItems` **por pedido** | `findByOrderIdIn` em chunks de 500 | p95 **~357 ms** · RPS **~173** |
+| `GET /api/recommendations/customers/{id}` | `concatMap(findById)` + fan-out Redis largo | `findByIdIn` + fan-out Redis concurrency 16 + RouterFunction + `limitRate` | p95 **~899 ms** · RPS **~92** (grafo = DevSeed só) |
+
+\*DB de orders truncado (~23k pedidos de k6 antigos removidos) e Redis flush + reseed antes da medição. Suite antiga (`20260720`): orders **130.63 ms**, recommendations **359.33 ms** — números não 1:1 (duração 20s vs 30s; volume de dados diferente).
+
+Arquivos: `OrderRepositoryAdapter.attachItemsBatch`, `GetPurchaseRecommendationsUseCase`, `RecommendationRouterConfig` / `RecommendationReadHandler`, `ProductViewGraphRedisStore.recordView` (`Mono.zip`).
+
+---
+
 ## Thread usage (main WebFlux win)
 
 Measured via `/actuator/metrics/jvm.threads.live` and `jvm.threads.peak` on the running container.
@@ -167,7 +182,7 @@ Measured via `/actuator/metrics/jvm.threads.live` and `jvm.threads.peak` on the 
 
 | Scenario | VUs | p95 | RPS | Threads live / peak |
 |----------|-----|-----|-----|---------------------|
-| GET recommendations (DevSeed only) | 50 | 659 ms | 109 | ~40 / 41 |
+| GET recommendations (DevSeed only, pós-batch) | 50 | **~899 ms** | **~92** | ~40 / 41 |
 | GET recommendations (**dense Redis graph**, 100 peers) | 200 | 39.3 s | 12.5 | ~39 / 41 |
 | GET /api/products (suite baseline) | 50 | 181 ms | 278 | ~39 / 41 |
 | GET /api/products stress | 200 | 697 ms | 470 | ~40 / 41 |
@@ -206,7 +221,7 @@ Yes — usually in **infra cost and headroom**, not because each HTTP call becom
 ## Load test results — WebFlux (this repo)
 
 **Conditions:** 50 VUs · 30s per scenario · Docker Compose · k6  
-**Notes:** R2DBC pool `max-size=50`; product GETs re-medidos após RouterFunction + read sem `@Transactional` + `limitRate` (2026-07-21). Demais linhas = suite `20260720`.
+**Notes:** R2DBC pool `max-size=50`. Products / orders / recommendations re-medidos após otimizações de 2026-07-21. Demais linhas = suite `20260720`.
 
 p95 = 95th percentile of `http_req_duration`.
 
@@ -217,16 +232,17 @@ p95 = 95th percentile of `http_req_duration`.
 | Product | GET /api/products/{id} | — | **416** | **54.66 ms** | 0.00% | 100.00% |
 | Customer | GET /api/customers | 12,914 | 429.07 | 56.09 ms | 0.00% | 100.00% |
 | Customer | GET /api/customers/{id} | 12,524 | 412.47 | 68.37 ms | 0.00% | 100.00% |
-| Order | GET /api/orders/customer/{id} | 10,808 | 356.16 | 130.63 ms | 0.00% | 100.00% |
+| Order | GET /api/orders/customer/{id} | — | **~173** | **~357 ms** | 0.00% | 100.00% |
 | Order | POST /api/orders | 8,394 | 273.93 | 195.91 ms | 0.00% | 100.00% |
 | Order | POST /api/orders/{id}/items | 8,980 | 296.04 | 276.74 ms | 0.00% | 100.00% |
 | Order | POST /api/orders/{id}/pay | 10,229 | 334.55 | 241.67 ms | 0.00% | 100.00% |
 | Payment | POST /api/payments | 11,684 | 383.84 | 211.55 ms | 0.00% | 100.00% |
-| Redis | GET /api/recommendations/customers/{id} | 6,447 | 211.99 | 359.33 ms | 0.00% | 100.00% |
+| Redis | GET /api/recommendations/customers/{id} | — | **~92** | **~899 ms** | 0.00% | 100.00% |
 | Redis | POST /api/recommendations/.../views | 11,342 | 374.44 | 107.17 ms | 0.00% | 100.00% |
 | Checkout | order + item + payment | 10,043 | 325.90 | 254.99 ms | 0.00% | 100.00% |
 
-`POST /api/auth/login` foi **removido** da API e da suite (bcrypt/CPU-bound; será reintroduzido por último).
+Orders / recommendations: medição pós **batch `IN`** / **`findByIdIn`** (DB truncado + Redis reseed). Suite antiga tinha orders **130.63 ms** e recommendations **359.33 ms** (N+1 / `concatMap`).  
+`POST /api/auth/login` removido da API e da suite (bcrypt; por último).
 
 ---
 
@@ -237,11 +253,12 @@ Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](
 
 | Endpoint | Sync p95 | CF p95 | WebFlux p95 | Notes |
 |----------|----------|--------|-------------|--------|
-| POST /api/recommendations/.../views | 4.85 ms | **3.56 ms (−27%)** | 107.17 ms | CF overlaps Redis writes; WebFlux still non-blocking but R2DBC/Redis + Docker Desktop add overhead vs that baseline host |
-| GET /api/recommendations/customers/{id} | 4.52 ms | 8.58 ms (+90%) | 359.33 ms | Fan-out / hydration cost; CF already slower than sync on small seed |
+| POST /api/recommendations/.../views | 4.85 ms | **3.56 ms (−27%)** | 107.17 ms | CF overlaps Redis writes; WebFlux: `Mono.zip` nos SADDs |
+| GET /api/recommendations/customers/{id} | 4.52 ms | 8.58 ms (+90%) | **~899 ms** (seed) | Antes suite **359 ms** com `concatMap`; agora `findByIdIn` + RouterFunction |
 | GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s* | *Antes: N+1. Agora: query com JOIN (login adiado). |
 | GET /api/products | 3.41 ms | — | **147.53 ms** (−42% vs WebFlux antigo 254 ms) | RouterFunction + R2DBC sem tx + stream/`limitRate` |
 | GET /api/products/{id} | 3.38 ms | — | **54.66 ms** (−52% vs WebFlux antigo 114 ms) | Mesmo caminho funcional |
+| GET /api/orders/customer/{id} | — | EntityGraph (estudo JPA) | **~357 ms** | R2DBC: batch `items WHERE order_id IN (...)` (antes N+1; suite antiga 130 ms) |
 | GET /api/customers/{id} | 3.23 ms | — | 68.37 ms | Best WebFlux CRUD p95 in this suite |
 | Threads under ~50 VU load | Tomcat pool (often ≫ 100) | Tomcat + executor | **peak ≈ 89** | Clearest WebFlux advantage |
 | Threads @ 500 VU (`GET /products`) | (Tomcat would grow with load) | — | **~40 live / 41 peak** | Stress run 2026-07-21; density win |

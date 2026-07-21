@@ -27,15 +27,21 @@ public class ProductViewGraphRedisStore {
     private final ReactiveStringRedisTemplate redisTemplate;
     private final RecommendationProperties recommendationProperties;
 
+    /**
+     * User-side e product-side em paralelo (estilo CF {@code allOf}), depois TTLs.
+     */
     public Mono<Void> recordView(UUID customerId, UUID productId) {
         String userKey = userViewsKey(customerId);
         String productKey = productViewersKey(productId);
         Duration ttl = recommendationProperties.customerHistoryTtl();
 
-        return redisTemplate.opsForSet().add(userKey, productId.toString())
-                .then(redisTemplate.opsForSet().add(productKey, customerId.toString()))
-                .then(redisTemplate.expire(userKey, ttl))
-                .then(redisTemplate.expire(productKey, ttl))
+        Mono<Long> addUser = redisTemplate.opsForSet().add(userKey, productId.toString());
+        Mono<Long> addProduct = redisTemplate.opsForSet().add(productKey, customerId.toString());
+
+        return Mono.zip(addUser, addProduct)
+                .then(Mono.zip(
+                        redisTemplate.expire(userKey, ttl),
+                        redisTemplate.expire(productKey, ttl)))
                 .then();
     }
 
