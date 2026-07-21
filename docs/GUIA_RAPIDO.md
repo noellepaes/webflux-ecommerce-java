@@ -132,14 +132,32 @@ PRODUCT_ID=$(curl -s -X POST http://localhost:8080/api/products \
 curl -X POST "http://localhost:8080/api/products/$PRODUCT_ID/decrease-stock?quantity=10"
 ```
 
-## 6. Verificar Logs
+## 6. Testes de carga (k6)
+
+```powershell
+cd load-tests
+.\run-suite.ps1 -Vus 50 -Duration "30s"
+.\run-stress.ps1 -Vus 200 -Duration "45s" -GraphPeers 100
+```
+
+Resumos em `load-tests/results/` (sem dumps `.log` no repo). Detalhes e tabelas: `README.md`.
+
+### Por que economizar threads sai mais barato?
+
+Não porque cada request gaste menos CPU — e sim porque **mais clientes cabem na mesma máquina**:
+
+- Cada thread de plataforma custa memória (~1 MB de stack + objetos). Tomcat com centenas de threads inchadas → VM maior ou OOM mais cedo.
+- WebFlux manteve ~**40 threads com 500 VUs** em `GET /api/products`; modelo bloqueante tenderia a crescer o pool com a concorrência.
+- Na prática: **menos réplicas / instâncias menores** para a mesma carga I/O-bound → conta de cloud menor. bcrypt/SQL pesado continuam caros.
+
+## 7. Verificar Logs
 
 Os logs do Spring Boot mostrarão:
 - Schemas sendo criados pelo Flyway
 - SQL sendo executado
 - Erros de validação
 
-## 7. Parar a Aplicação
+## 8. Parar a Aplicação
 
 ```bash
 # Parar aplicação: Ctrl+C

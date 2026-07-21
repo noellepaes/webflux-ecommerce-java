@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @Component
@@ -28,6 +29,14 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
     @Override
     public Mono<Customer> findByEmail(String email) {
         return delegate.findByEmail(email);
+    }
+
+    @Override
+    public Flux<Customer> findByEmailIn(Collection<String> emails) {
+        if (emails == null || emails.isEmpty()) {
+            return Flux.empty();
+        }
+        return delegate.findByEmailIn(emails);
     }
 
     @Override

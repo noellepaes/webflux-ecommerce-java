@@ -4,6 +4,10 @@
 # Log file
 *.log
 
+# k6 raw dumps (scripts write compact summaries only)
+load-tests/results/*.log
+load-tests/results/*-threads-*.log
+
 # BlueJ files
 *.ctxt
 

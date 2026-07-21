@@ -1,0 +1,17 @@
+# Stress summary (WebFlux) — 2026-07-21
+# Re-run: .\load-tests\run-stress.ps1 -Vus 200 -Duration "45s" -GraphPeers 100
+
+Idle JVM threads before stress: live ~40 · peak ~41
+
+| Test | VUs | Reqs | RPS | p95 | Fail | Threads live/peak |
+|------|-----|------|-----|-----|------|-------------------|
+| recommendations (DevSeed only) | 50 | 3392 | 109.25 | 658.85 ms | 0% | ~40 / 41 |
+| recommendations dense graph (100 peers, 705 view posts) | 200 | 1007 | 12.54 | 39.31 s | 0% | ~39 / 41 |
+| products-list (suite baseline) | 50 | 8380 | 278.07 | 181 ms | 0% | ~39 / 41 |
+| products-list stress | 200 | 21244 | 470.44 | 697.32 ms | 0% | ~40 / 41 |
+| products-list stress (extra) | 500 | 19476 | 474.31 | 1.47 s | 0% | ~39 / 41 |
+
+Takeaways:
+- Dense graph + high VU raises latency (more Redis fan-out / R2DBC contention) — expected.
+- Thread count stays ~40 even at 500 concurrent clients on GET /api/products.
+- WebFlux win here is concurrency density (connections per thread / RAM), not beating JPA p95 on tiny reads.

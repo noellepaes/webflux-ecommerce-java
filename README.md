@@ -71,9 +71,10 @@ src/main/java/com/ecommerce/
  └── shared/
 
 load-tests/
- ├── k6/scenarios/     # one script per endpoint (+ checkout)
- ├── run-suite.ps1     # sequential suite (compare endpoints in the terminal)
- └── results/         # suite-*.txt reports
+ ├── k6/scenarios/     # one script per endpoint (+ checkout + stress)
+ ├── run-suite.ps1      # sequential suite → compact summary in results/
+ ├── run-stress.ps1     # dense Redis graph + high VU (products / recommendations)
+ └── results/          # compact suite-*.txt / stress-*.txt only (no raw .log dumps)
 
 monitoring/
 docs/
@@ -105,15 +106,22 @@ Seed DEV users (password `123456`): `lebron.seed@dev.local`, `noelle.seed@dev.lo
 ```powershell
 cd load-tests
 .\run-suite.ps1 -Vus 50 -Duration "30s"
+
+# Optional: high concurrency + dense Redis graph (recommendations + products)
+.\run-stress.ps1 -Vus 200 -Duration "45s" -GraphPeers 100
 ```
 
 Grafana load-test dashboard: http://localhost:3000/d/ecommerce-load-test
+
+Results kept as **compact summaries** under `load-tests/results/` (full k6 dumps are not committed).
 
 ---
 
 ## Thread usage (main WebFlux win)
 
-Measured via `/actuator/metrics/jvm.threads.live` and `jvm.threads.peak` on the running container during the k6 suite (**50 VUs**).
+Measured via `/actuator/metrics/jvm.threads.live` and `jvm.threads.peak` on the running container.
+
+### Suite (50 VUs, mixed endpoints)
 
 | Moment | Live threads | Peak threads |
 |--------|--------------|--------------|
@@ -121,15 +129,43 @@ Measured via `/actuator/metrics/jvm.threads.live` and `jvm.threads.peak` on the 
 | Mid-suite (under load) | **88** | **89** |
 | After suite | **39** | **89** |
 
+### Stress (I/O endpoints, high concurrency) — 2026-07-21
+
+| Scenario | VUs | p95 | RPS | Threads live / peak |
+|----------|-----|-----|-----|---------------------|
+| GET recommendations (DevSeed only) | 50 | 659 ms | 109 | ~40 / 41 |
+| GET recommendations (**dense Redis graph**, 100 peers) | 200 | 39.3 s | 12.5 | ~39 / 41 |
+| GET /api/products (suite baseline) | 50 | 181 ms | 278 | ~39 / 41 |
+| GET /api/products stress | 200 | 697 ms | 470 | ~40 / 41 |
+| GET /api/products stress | **500** | 1.47 s | 474 | **~39 / 41** |
+
+Report: `load-tests/results/stress-20260721-142925.txt`  
+Runner: `.\load-tests\run-stress.ps1 -Vus 200 -Duration "45s" -GraphPeers 100`
+
+Dense-graph recommendations get slower (expected fan-out). **Thread count does not grow with VUs** — that is the WebFlux signal.
+
+### Why fewer threads matters (is it cheaper?)
+
+Yes — usually in **infra cost and headroom**, not because each HTTP call becomes cheaper:
+
+| Effect | Why it saves money / risk |
+|--------|---------------------------|
+| **More connections per GB of RAM** | Each platform thread costs ~1 MB stack (+ objects). Hundreds of Tomcat threads → larger heap/RSS → bigger instance or earlier OOM. |
+| **Fewer / smaller JVM replicas** | Same concurrent clients on a smaller VM (or more tenants per node) → lower cloud bill when I/O-bound. |
+| **Less context-switch tax** | OS schedules fewer threads → more predictable under traffic spikes. |
+| **Not a magic CPU discount** | bcrypt, big SQL, Redis fan-out still cost the same CPU/network. Login p95 can even look worse if the elastic pool is small. |
+
+**Rule of thumb:** WebFlux pays off when you are paying for **idle blocked threads waiting on I/O** at high concurrency. It does **not** make a 3 ms JPA `SELECT` faster.
+
 ### Why this matters vs MVC
 
-| Model | Typical behaviour under 50 concurrent clients |
+| Model | Typical behaviour under concurrent clients |
 |-------|-----------------------------------------------|
 | **Spring MVC (Tomcat)** | ~1 request thread blocked per in-flight call → pool grows toward `server.tomcat.threads.max` (often **200**) |
 | **MVC + CompletableFuture** | Request thread may return earlier, but Tomcat + `ioTaskExecutor` still hold **many** platform threads |
-| **WebFlux (Netty)** | Small event-loop + limited elastic pool for blocking work (e.g. bcrypt) → **peak ~89** in this run |
+| **WebFlux (Netty)** | Small event-loop; stress above stayed **~40 threads at 500 VUs** on `GET /api/products` |
 
-**Takeaway:** under the same VU pressure, WebFlux kept the JVM around **~90 threads peak** instead of scaling a large servlet pool. That is the primary scalability win of this migration.
+**Takeaway:** under the same client pressure, WebFlux keeps a flat thread budget instead of scaling a large servlet pool. That is the primary scalability / cost-density win of this migration.
 
 ---
 
@@ -171,17 +207,19 @@ Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](
 |----------|----------|--------|-------------|--------|
 | POST /api/recommendations/.../views | 4.85 ms | **3.56 ms (−27%)** | 107.17 ms | CF overlaps Redis writes; WebFlux still non-blocking but R2DBC/Redis + Docker Desktop add overhead vs that baseline host |
 | GET /api/recommendations/customers/{id} | 4.52 ms | 8.58 ms (+90%) | 359.33 ms | Fan-out / hydration cost; CF already slower than sync on small seed |
-| GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s | Parallel customer lookups; WebFlux pays reactive pipeline + R2DBC |
+| GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s* | *Antes do fix: N+1 (`findAll` users + `findByEmail` por user). Agora: 2 queries (users + `IN` emails). Login **não** é N+1. |
 | GET /api/products | 3.41 ms | — | 253.93 ms | Simple read: MVC/JPA was already very fast |
 | GET /api/customers/{id} | 3.23 ms | — | 68.37 ms | Best WebFlux CRUD p95 in this suite |
 | POST /api/auth/login | 470.31 ms | — | 10.84 s | bcrypt-bound; WebFlux limits parallel CPU-bound hashes |
 | Threads under ~50 VU load | Tomcat pool (often ≫ 100) | Tomcat + executor | **peak ≈ 89** | Clearest WebFlux advantage |
+| Threads @ 500 VU (`GET /products`) | (Tomcat would grow with load) | — | **~40 live / 41 peak** | Stress run 2026-07-21; density win |
 
 ### How to read the comparison
 
-1. **Threads ↓** — WebFlux is the winner: ~**89 peak** vs a blocking Tomcat model that grows with concurrency.
+1. **Threads ↓** — WebFlux is the winner: ~**89 peak** on the mixed suite, and **~40 threads at 500 VUs** on `GET /api/products` stress.
 2. **Latency** — On this machine (Docker Desktop / Windows), absolute WebFlux p95 for simple CRUD did **not** beat the published Sync/CF numbers from the sibling study. Reactive stacks shine when you need **many concurrent connections with little memory/threads**, not when each request is a single tiny SQL round-trip already < 5 ms on JPA.
 3. **CF vs WebFlux** — CF improves *selected* parallel I/O paths inside MVC. WebFlux changes the **server concurrency model** for every endpoint.
+4. **Cost** — Fewer threads → less RAM per concurrent client → often **cheaper instances / higher density**, not cheaper CPU per request.
 
 ---
 

@@ -42,15 +42,15 @@ foreach ($test in $tests) {
         -e VUS=$Vus -e DURATION=$Duration `
         k6 run "/scripts/$($test.File)" 2>&1 | Out-String
 
-    $output | Out-File -FilePath (Join-Path $ResultsDir "$name-$timestamp.log") -Encoding utf8
-    Add-Content -Path $reportFile -Value ("`n=== {0} | {1} | {2} ===" -f $test.Module, $test.Store, $test.Endpoint)
-    Add-Content -Path $reportFile -Value $output
-
     $reqs = if ($output -match 'http_reqs\.+?:\s+(\d+)') { $matches[1] } else { "?" }
     $rps = if ($output -match 'http_reqs\.+?:\s+\d+\s+([\d.]+)/s') { $matches[1] } else { "?" }
     $p95 = if ($output -match 'http_req_duration[^\r\n]*p\(95\)=([\d.]+(?:ms|s|µs|us|ns)?)') { $matches[1] } else { "?" }
     $failed = if ($output -match 'http_req_failed\.+?:\s+([\d.]+%)') { $matches[1] } else { "?" }
     $checks = if ($output -match 'checks\.+?:\s+([\d.]+%)') { $matches[1] } else { "?" }
+
+    # Keep only one compact line per scenario (no per-endpoint .log dumps).
+    Add-Content -Path $reportFile -Value ("{0}`t{1}`t{2}`treqs={3}`trps={4}`tp95={5}`tfail={6}`tchecks={7}" -f `
+        $test.Module, $test.Store, $test.Endpoint, $reqs, $rps, $p95, $failed, $checks)
 
     $summary += [PSCustomObject]@{
         Modulo   = $test.Module
