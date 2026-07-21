@@ -9,7 +9,6 @@ $ResultsDir = Join-Path $ProjectRoot "load-tests\results"
 New-Item -ItemType Directory -Force -Path $ResultsDir | Out-Null
 
 $tests = @(
-    @{ Module = "Auth";        Store = "Postgres"; Endpoint = "POST /api/auth/login";                    File = "scenarios/auth-login.js" },
     @{ Module = "Auth";        Store = "Postgres"; Endpoint = "GET /api/auth/users";                     File = "scenarios/auth-users.js" },
     @{ Module = "Product";     Store = "Postgres"; Endpoint = "GET /api/products";                      File = "scenarios/products-list.js" },
     @{ Module = "Product";     Store = "Postgres"; Endpoint = "GET /api/products/{id}";                File = "scenarios/products-by-id.js" },

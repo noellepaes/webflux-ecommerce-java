@@ -1,0 +1,14 @@
+# Product reads after 3 surgical WebFlux changes — 2026-07-21
+# RouterFunction + R2DBC read without @Transactional + Flux.limitRate(256)
+# Conditions: Docker Compose · app warm · k6
+
+| Endpoint | VUs | pause | avg | p95 | RPS |
+|----------|-----|-------|-----|-----|-----|
+| GET /api/products | 1 | 0 | 11.98 ms | 23.56 ms | 78.3 |
+| GET /api/products | 50 | 0.1 | 55.27 ms | **147.53 ms** | **306.2** |
+| GET /api/products/{id} | 1 | 0 | 6.45 ms | 13.8 ms | 139.3 |
+| GET /api/products/{id} | 50 | 0.1 | 16.48 ms | **54.66 ms** | **415.5** |
+
+Previous suite-20260720 (annotated controller + @Transactional read):
+| GET /api/products | 50 | 0.1 | — | 253.93 ms | 266 |
+| GET /api/products/{id} | 50 | 0.1 | — | 114.28 ms | 362 |

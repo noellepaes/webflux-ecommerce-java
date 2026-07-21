@@ -19,22 +19,19 @@ export const options = {
 };
 
 export function setup() {
-  const loginRes = http.post(
-    `${BASE_URL}/api/auth/login`,
-    JSON.stringify({
-      email: 'noelle.seed@dev.local',
-      password: '123456',
-    }),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
-
-  if (loginRes.status !== 200) {
-    throw new Error(`Login falhou: ${loginRes.status} ${loginRes.body}`);
+  const customersRes = http.get(`${BASE_URL}/api/customers`);
+  if (customersRes.status !== 200) {
+    throw new Error(`Clientes indisponíveis: ${customersRes.status}`);
   }
 
-  const session = loginRes.json();
-  const productsRes = http.get(`${BASE_URL}/api/products`);
+  const customers = customersRes.json();
+  const customer =
+    customers.find((c) => c.email === 'noelle.seed@dev.local') || customers[0];
+  if (!customer) {
+    throw new Error('Nenhum cliente no seed');
+  }
 
+  const productsRes = http.get(`${BASE_URL}/api/products`);
   if (productsRes.status !== 200) {
     throw new Error(`Listagem de produtos falhou: ${productsRes.status}`);
   }
@@ -45,7 +42,7 @@ export function setup() {
   }
 
   return {
-    customerId: session.customerId,
+    customerId: customer.id,
     productId: products[0].id,
   };
 }

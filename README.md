@@ -23,7 +23,7 @@ Modular monolith organized by DDD Bounded Contexts:
 | customer | Customers |
 | order | Orders, items, pay/cancel flow |
 | payment | Payment processing |
-| auth | Login and user listing |
+| auth | User listing (`GET /users`; login adiado) |
 | recommendation | Collaborative recommendations (Redis) |
 | shared | Cross-cutting types only |
 
@@ -97,7 +97,8 @@ docker compose up -d --build
 | PostgreSQL | localhost:5432 |
 | Redis | localhost:6379 |
 
-Seed DEV users (password `123456`): `lebron.seed@dev.local`, `noelle.seed@dev.local`, `daniel.seed@dev.local`
+Seed DEV customers: `lebron.seed@dev.local`, `noelle.seed@dev.local`, `daniel.seed@dev.local`  
+(`POST /api/auth/login` removido temporariamente — usuários seed ainda existem para `GET /api/auth/users`.)
 
 ---
 
@@ -114,6 +115,39 @@ cd load-tests
 Grafana load-test dashboard: http://localhost:3000/d/ecommerce-load-test
 
 Results kept as **compact summaries** under `load-tests/results/` (full k6 dumps are not committed).
+
+---
+
+## Product reads — 3 mudanças cirúrgicas (artigo WebFlux)
+
+Aplicadas só em `GET /api/products` e `GET /api/products/{id}` (auth ignorado por enquanto).
+
+| # | Mudança | Onde |
+|---|---------|------|
+| 1 | **RouterFunction + Handler** (sem `@GetMapping` no hot path) | `ProductRouterConfig` + `ProductReadHandler` |
+| 2 | **R2DBC sem `@Transactional` no read** (não segura conexão do pool na cadeia) | `GetProductUseCase` |
+| 3 | **Stream do `Flux` + `limitRate(256)`** (contrapressão; JSON array, k6 compatível) | `ProductReadHandler.list` |
+
+Writes (`POST`/`PUT`/`decrease-stock`) continuam em `ProductController`.
+
+### Benchmark (50 VUs · pause 0.1 · Docker Compose · app quente)
+
+| Endpoint | Antes (`suite-20260720`) | Depois (2026-07-21) | Delta |
+|----------|--------------------------|---------------------|-------|
+| `GET /api/products` | p95 **253.93 ms** · RPS 266 | p95 **147.53 ms** · RPS **306** | **−42% p95** · +15% RPS |
+| `GET /api/products/{id}` | p95 **114.28 ms** · RPS 362 | p95 **54.66 ms** · RPS **416** | **−52% p95** · +15% RPS |
+
+1 VU (latência absoluta neste host): list ~12 ms avg / by-id ~6 ms avg — ainda acima do Sync JPA (~3 ms), mas bem mais perto.
+
+```
+Cliente
+  |
+  v
+[Netty event-loop]
+  |
+  v
+RouterFunction --> ProductReadHandler --> GetProductUseCase --> R2DBC (Flux/Mono)
+```
 
 ---
 
@@ -153,7 +187,7 @@ Yes — usually in **infra cost and headroom**, not because each HTTP call becom
 | **More connections per GB of RAM** | Each platform thread costs ~1 MB stack (+ objects). Hundreds of Tomcat threads → larger heap/RSS → bigger instance or earlier OOM. |
 | **Fewer / smaller JVM replicas** | Same concurrent clients on a smaller VM (or more tenants per node) → lower cloud bill when I/O-bound. |
 | **Less context-switch tax** | OS schedules fewer threads → more predictable under traffic spikes. |
-| **Not a magic CPU discount** | bcrypt, big SQL, Redis fan-out still cost the same CPU/network. Login p95 can even look worse if the elastic pool is small. |
+| **Not a magic CPU discount** | bcrypt / SQL pesado / fan-out Redis ainda custam CPU/rede — login foi **removido da suite** para tratar por último. |
 
 **Rule of thumb:** WebFlux pays off when you are paying for **idle blocked threads waiting on I/O** at high concurrency. It does **not** make a 3 ms JPA `SELECT` faster.
 
@@ -172,17 +206,15 @@ Yes — usually in **infra cost and headroom**, not because each HTTP call becom
 ## Load test results — WebFlux (this repo)
 
 **Conditions:** 50 VUs · 30s per scenario · Docker Compose · k6  
-**Report:** `load-tests/results/suite-20260720-095710.txt`  
-**Notes:** R2DBC pool `max-size=50`; orders/payments truncated before the suite; `orders-add-item` creates **one order per iteration** (avoids `@Version` conflicts).
+**Notes:** R2DBC pool `max-size=50`; product GETs re-medidos após RouterFunction + read sem `@Transactional` + `limitRate` (2026-07-21). Demais linhas = suite `20260720`.
 
 p95 = 95th percentile of `http_req_duration`.
 
 | Module | Endpoint | Reqs | RPS | p95 | Failures | Checks |
 |--------|----------|------|-----|-----|----------|--------|
-| Auth | POST /api/auth/login | 220 | 6.86 | **10.84 s** | 0.00% | 100.00% |
 | Auth | GET /api/auth/users | 2,559 | 83.86 | 1.02 s | 0.00% | 100.00% |
-| Product | GET /api/products | 8,006 | 265.97 | 253.93 ms | 0.00% | 100.00% |
-| Product | GET /api/products/{id} | 10,996 | 361.71 | 114.28 ms | 0.00% | 100.00% |
+| Product | GET /api/products | — | **306** | **147.53 ms** | 0.00% | 100.00% |
+| Product | GET /api/products/{id} | — | **416** | **54.66 ms** | 0.00% | 100.00% |
 | Customer | GET /api/customers | 12,914 | 429.07 | 56.09 ms | 0.00% | 100.00% |
 | Customer | GET /api/customers/{id} | 12,524 | 412.47 | 68.37 ms | 0.00% | 100.00% |
 | Order | GET /api/orders/customer/{id} | 10,808 | 356.16 | 130.63 ms | 0.00% | 100.00% |
@@ -194,7 +226,7 @@ p95 = 95th percentile of `http_req_duration`.
 | Redis | POST /api/recommendations/.../views | 11,342 | 374.44 | 107.17 ms | 0.00% | 100.00% |
 | Checkout | order + item + payment | 10,043 | 325.90 | 254.99 ms | 0.00% | 100.00% |
 
-Login p95 is dominated by **bcrypt** on `boundedElastic` (same cost as MVC; fewer concurrent hashes → lower RPS under WebFlux’s smaller thread budget).
+`POST /api/auth/login` foi **removido** da API e da suite (bcrypt/CPU-bound; será reintroduzido por último).
 
 ---
 
@@ -207,10 +239,10 @@ Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](
 |----------|----------|--------|-------------|--------|
 | POST /api/recommendations/.../views | 4.85 ms | **3.56 ms (−27%)** | 107.17 ms | CF overlaps Redis writes; WebFlux still non-blocking but R2DBC/Redis + Docker Desktop add overhead vs that baseline host |
 | GET /api/recommendations/customers/{id} | 4.52 ms | 8.58 ms (+90%) | 359.33 ms | Fan-out / hydration cost; CF already slower than sync on small seed |
-| GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s* | *Antes do fix: N+1 (`findAll` users + `findByEmail` por user). Agora: 2 queries (users + `IN` emails). Login **não** é N+1. |
-| GET /api/products | 3.41 ms | — | 253.93 ms | Simple read: MVC/JPA was already very fast |
+| GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s* | *Antes: N+1. Agora: query com JOIN (login adiado). |
+| GET /api/products | 3.41 ms | — | **147.53 ms** (−42% vs WebFlux antigo 254 ms) | RouterFunction + R2DBC sem tx + stream/`limitRate` |
+| GET /api/products/{id} | 3.38 ms | — | **54.66 ms** (−52% vs WebFlux antigo 114 ms) | Mesmo caminho funcional |
 | GET /api/customers/{id} | 3.23 ms | — | 68.37 ms | Best WebFlux CRUD p95 in this suite |
-| POST /api/auth/login | 470.31 ms | — | 10.84 s | bcrypt-bound; WebFlux limits parallel CPU-bound hashes |
 | Threads under ~50 VU load | Tomcat pool (often ≫ 100) | Tomcat + executor | **peak ≈ 89** | Clearest WebFlux advantage |
 | Threads @ 500 VU (`GET /products`) | (Tomcat would grow with load) | — | **~40 live / 41 peak** | Stress run 2026-07-21; density win |
 

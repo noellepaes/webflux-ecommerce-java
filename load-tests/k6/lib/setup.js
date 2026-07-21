@@ -1,20 +1,24 @@
 import http from 'k6/http';
 import { config, jsonHeaders } from './config.js';
 
+/**
+ * Bootstrap sem login: usa o customer seed (email) + primeiro produto do catálogo.
+ */
 export function bootstrap() {
-  const loginRes = http.post(
-    `${config.baseUrl}/api/auth/login`,
-    JSON.stringify({ email: config.email, password: config.password }),
-    jsonHeaders
-  );
-
-  if (loginRes.status !== 200) {
-    throw new Error(`Login falhou: ${loginRes.status} ${loginRes.body}`);
+  const customersRes = http.get(`${config.baseUrl}/api/customers`);
+  if (customersRes.status !== 200) {
+    throw new Error(`Clientes indisponíveis: ${customersRes.status}`);
   }
 
-  const session = loginRes.json();
-  const productsRes = http.get(`${config.baseUrl}/api/products`);
+  const customers = customersRes.json();
+  if (!customers.length) {
+    throw new Error('Nenhum cliente no seed');
+  }
 
+  const customer =
+    customers.find((c) => c.email === config.email) || customers[0];
+
+  const productsRes = http.get(`${config.baseUrl}/api/products`);
   if (productsRes.status !== 200) {
     throw new Error(`Produtos indisponíveis: ${productsRes.status}`);
   }
@@ -27,7 +31,7 @@ export function bootstrap() {
   const product = products[0];
 
   return {
-    customerId: session.customerId,
+    customerId: customer.id,
     productId: product.id,
     productName: product.name,
     productPrice: product.price,

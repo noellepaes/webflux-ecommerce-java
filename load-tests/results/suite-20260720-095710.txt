@@ -1,12 +1,12 @@
 # Canonical suite summary (WebFlux) — 2026-07-20
 # Full k6 dumps are not kept in-repo; re-run: .\load-tests\run-suite.ps1
+# NOTE: POST /api/auth/login removed from API/suite (deferred).
 
 Conditions: 50 VUs · 30s/scenario · Docker Compose · k6
 R2DBC pool max-size=50 · JVM threads under load: live ~88 · peak ~89
 
 | Module | Endpoint | Reqs | RPS | p95 | Failures | Checks |
 |--------|----------|------|-----|-----|----------|--------|
-| Auth | POST /api/auth/login | 220 | 6.86 | 10.84 s | 0.00% | 100% |
 | Auth | GET /api/auth/users | 2559 | 83.86 | 1.02 s | 0.00% | 100% |
 | Product | GET /api/products | 8006 | 265.97 | 253.93 ms | 0.00% | 100% |
 | Product | GET /api/products/{id} | 10996 | 361.71 | 114.28 ms | 0.00% | 100% |
