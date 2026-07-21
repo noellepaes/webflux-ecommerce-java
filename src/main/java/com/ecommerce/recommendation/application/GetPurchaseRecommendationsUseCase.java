@@ -30,7 +30,8 @@ public class GetPurchaseRecommendationsUseCase {
         int limit = recommendationProperties.suggestionLimit();
 
         return viewGraphStore.getUserViewedProductIds(customerId)
-                .collect(HashSet::new, Set::add)
+                .collectList()
+                .map(list -> (Set<UUID>) new HashSet<>(list))
                 .flatMapMany(userViews -> collaborativeScores(customerId, userViews)
                         .flatMapMany(scores -> {
                             Flux<UUID> ranked = Flux.fromIterable(scores.entrySet())

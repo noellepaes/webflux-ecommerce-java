@@ -3,6 +3,10 @@ spring:
     url: r2dbc:postgresql://postgres:5432/ecommerce
     username: ecommerce
     password: ecommerce
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 50
 
   datasource:
     url: jdbc:postgresql://postgres:5432/ecommerce
@@ -11,6 +15,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   flyway:
+    enabled: true
     url: jdbc:postgresql://postgres:5432/ecommerce
     user: ecommerce
     password: ecommerce

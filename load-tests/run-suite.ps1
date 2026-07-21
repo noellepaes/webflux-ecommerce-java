@@ -48,7 +48,7 @@ foreach ($test in $tests) {
 
     $reqs = if ($output -match 'http_reqs\.+?:\s+(\d+)') { $matches[1] } else { "?" }
     $rps = if ($output -match 'http_reqs\.+?:\s+\d+\s+([\d.]+)/s') { $matches[1] } else { "?" }
-    $p95 = if ($output -match 'http_req_duration\.+?p\(95\)=([\d.]+ms)') { $matches[1] } else { "?" }
+    $p95 = if ($output -match 'http_req_duration[^\r\n]*p\(95\)=([\d.]+(?:ms|s|µs|us|ns)?)') { $matches[1] } else { "?" }
     $failed = if ($output -match 'http_req_failed\.+?:\s+([\d.]+%)') { $matches[1] } else { "?" }
     $checks = if ($output -match 'checks\.+?:\s+([\d.]+%)') { $matches[1] } else { "?" }
 

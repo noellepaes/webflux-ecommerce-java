@@ -1,161 +1,206 @@
-# Ecommerce Monolith Modular
+# Java Ecommerce — WebFlux / R2DBC Performance Study
 
-Projeto **monolito modular** em **Java 21** (um único projeto Maven/Spring Boot), preparado para evoluir para microsserviços.
+Modular monolith e-commerce API built with **Java 17**, **Spring Boot 3.2**, **WebFlux** and **R2DBC**, designed to measure request latency and **thread efficiency** after moving from blocking Spring MVC + JPA to a fully reactive stack (`Mono` / `Flux`).
 
-## 🧱 Estrutura (1 projeto, módulos por pacote)
+Repository: [noellepaes/webflux-ecommerce-java](https://github.com/noellepaes/webflux-ecommerce-java)
 
-O projeto é **um único app executável** e os Bounded Contexts ficam separados por pacote dentro de `src/main/java`:
+Related studies:
+
+| Repo | Stack | Goal |
+|------|--------|------|
+| [java-ecommerce-completable-future](https://github.com/noellepaes/java-ecommerce-completable-future) | MVC + JPA + `CompletableFuture` | Parallelize independent I/O on Tomcat |
+| **this repo** | **WebFlux + R2DBC + Reactive Redis** | Non-blocking I/O end-to-end, fewer threads under load |
+
+---
+
+## What this project does
+
+Modular monolith organized by DDD Bounded Contexts:
+
+| Module | Responsibility |
+|--------|----------------|
+| product | Catalog, stock, product CRUD |
+| customer | Customers |
+| order | Orders, items, pay/cancel flow |
+| payment | Payment processing |
+| auth | Login and user listing |
+| recommendation | Collaborative recommendations (Redis) |
+| shared | Cross-cutting types only |
+
+Each module: `domain` → `application` (use cases) → `infrastructure` → `presentation` (REST).
+
+### Architecture highlights
+
+- Single executable Spring Boot app on **Netty** (no Tomcat)
+- PostgreSQL with separate schemas per context + Flyway (JDBC for migrations only)
+- **R2DBC** for reactive persistence; **Reactive Redis** for co-view graphs
+- Modules reference each other by UUID (microservice-ready)
+- Prometheus + Grafana + k6 for load testing
+
+### Goal of this repo
+
+Compare **latency** and especially **JVM thread usage** against:
+
+1. Synchronous MVC + JPA (baseline from the CF study)
+2. MVC + JPA + `CompletableFuture` (same suite)
+
+WebFlux wins concurrency by using a small event-loop instead of one servlet thread per request — not by making bcrypt or a single SQL query magically faster.
+
+---
+
+## Tech stack
+
+- Java 17 · Spring Boot 3.2 · **Spring WebFlux** · **Spring Data R2DBC** · Spring Data Redis Reactive
+- PostgreSQL 15 · Flyway (JDBC) · Redis 7
+- Drivers: `org.postgresql:r2dbc-postgresql` + `r2dbc-pool` (reactive) · `org.postgresql:postgresql` (Flyway)
+- Micrometer · Prometheus · Grafana · Docker Compose · k6 · SpringDoc OpenAPI (WebFlux UI)
+
+---
+
+## Project structure
 
 ```
 src/main/java/com/ecommerce/
+ ├── auth/
  ├── product/
  ├── customer/
  ├── order/
  ├── payment/
+ ├── recommendation/
+ ├── config/
  └── shared/
+
+load-tests/
+ ├── k6/scenarios/     # one script per endpoint (+ checkout)
+ ├── run-suite.ps1     # sequential suite (compare endpoints in the terminal)
+ └── results/         # suite-*.txt reports
+
+monitoring/
+docs/
 ```
 
-### Estrutura DDD dentro de cada módulo
+---
 
-Cada contexto segue:
-
-```
-module/
- ├── domain/
- │    ├── model/
- │    ├── service/
- │    ├── repository/
- │    └── exception/
- ├── application/
- │    ├── usecase/
- │    └── dto/
- ├── infrastructure/
- │    └── repository/
- └── presentation/
-      ├── *Controller.java
-      └── *Request.java
-```
-
-## 🗄️ Banco de Dados
-
-### Estratégia: PostgreSQL com Schemas Separados
-
-- **1 banco PostgreSQL** com **4 schemas**:
-  - `product_schema`
-  - `customer_schema`
-  - `order_schema`
-  - `payment_schema`
-
-### Flyway como Fonte Única de Verdade
-
-Migrations em `src/main/resources/db/migration/v1/`:
-- `V1__01_create_schemas.sql`
-- `V1__02_create_customer_tables.sql`
-- `V1__03_create_product_tables.sql`
-- `V1__04_create_order_tables.sql`
-- `V1__05_create_payment_tables.sql`
-
-## 🚀 Como Executar
-
-### 1. Subir PostgreSQL com Docker
+## Quick start
 
 ```bash
-docker-compose up -d
+docker compose up -d --build
 ```
 
-### 2. Compilar o Projeto
+| Service | URL |
+|---------|-----|
+| API | http://localhost:8080 |
+| Swagger UI | http://localhost:8080/swagger-ui.html |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 (`admin` / `admin`) |
+| PostgreSQL | localhost:5432 |
+| Redis | localhost:6379 |
 
-```bash
-mvn clean install
+Seed DEV users (password `123456`): `lebron.seed@dev.local`, `noelle.seed@dev.local`, `daniel.seed@dev.local`
+
+---
+
+## Load tests (k6)
+
+```powershell
+cd load-tests
+.\run-suite.ps1 -Vus 50 -Duration "30s"
 ```
 
-### 3. Executar a Aplicação
+Grafana load-test dashboard: http://localhost:3000/d/ecommerce-load-test
 
-```bash
-mvn spring-boot:run
-```
+---
 
-A aplicação estará disponível em: `http://localhost:8080`
+## Thread usage (main WebFlux win)
 
-## 📋 Endpoints
+Measured via `/actuator/metrics/jvm.threads.live` and `jvm.threads.peak` on the running container during the k6 suite (**50 VUs**).
 
-### Product
-- `POST /api/products` - Criar produto
-- `GET /api/products/{id}` - Buscar produto
-- `GET /api/products` - Listar produtos
-- `PUT /api/products/{id}` - Atualizar produto
-- `POST /api/products/{id}/decrease-stock` - Reduzir estoque
+| Moment | Live threads | Peak threads |
+|--------|--------------|--------------|
+| Idle (before suite) | **43** | 46 |
+| Mid-suite (under load) | **88** | **89** |
+| After suite | **39** | **89** |
 
-### Customer
-- `POST /api/customers` - Criar cliente
-- `GET /api/customers/{id}` - Buscar cliente
-- `GET /api/customers` - Listar clientes
-- `PUT /api/customers/{id}` - Atualizar cliente
-- `DELETE /api/customers/{id}` - Desativar cliente
+### Why this matters vs MVC
 
-### Order
-- `POST /api/orders` - Criar pedido
-- `GET /api/orders/{id}` - Buscar pedido
-- `GET /api/orders/customer/{customerId}` - Listar pedidos do cliente
-- `POST /api/orders/{id}/items` - Adicionar item ao pedido
-- `POST /api/orders/{id}/pay` - Pagar pedido
-- `POST /api/orders/{id}/cancel` - Cancelar pedido
+| Model | Typical behaviour under 50 concurrent clients |
+|-------|-----------------------------------------------|
+| **Spring MVC (Tomcat)** | ~1 request thread blocked per in-flight call → pool grows toward `server.tomcat.threads.max` (often **200**) |
+| **MVC + CompletableFuture** | Request thread may return earlier, but Tomcat + `ioTaskExecutor` still hold **many** platform threads |
+| **WebFlux (Netty)** | Small event-loop + limited elastic pool for blocking work (e.g. bcrypt) → **peak ~89** in this run |
 
-### Payment
-- `POST /api/payments` - Criar pagamento
-- `GET /api/payments/{id}` - Buscar pagamento
-- `GET /api/payments/order/{orderId}` - Listar pagamentos do pedido
+**Takeaway:** under the same VU pressure, WebFlux kept the JVM around **~90 threads peak** instead of scaling a large servlet pool. That is the primary scalability win of this migration.
 
-## 🔄 Comunicação entre Módulos
+---
 
-### Atual (Monolito Modular)
+## Load test results — WebFlux (this repo)
 
-- **Módulo `shared/`**: Classes comuns (BaseEntity, DomainEvent, BusinessException)
-- **Referências por UUID**: Cada módulo referencia outros por UUID
-- **Comunicação síncrona**: Services podem chamar outros Services diretamente
+**Conditions:** 50 VUs · 30s per scenario · Docker Compose · k6  
+**Report:** `load-tests/results/suite-20260720-095710.txt`  
+**Notes:** R2DBC pool `max-size=50`; orders/payments truncated before the suite; `orders-add-item` creates **one order per iteration** (avoids `@Version` conflicts).
 
-### Futuro (Microsserviços)
+p95 = 95th percentile of `http_req_duration`.
 
-- **Eventos de domínio**: `OrderCreatedEvent`, `PaymentApprovedEvent`, etc.
-- **Message broker**: RabbitMQ/Kafka para comunicação assíncrona
-- **API Gateway**: Para comunicação síncrona entre serviços
+| Module | Endpoint | Reqs | RPS | p95 | Failures | Checks |
+|--------|----------|------|-----|-----|----------|--------|
+| Auth | POST /api/auth/login | 220 | 6.86 | **10.84 s** | 0.00% | 100.00% |
+| Auth | GET /api/auth/users | 2,559 | 83.86 | 1.02 s | 0.00% | 100.00% |
+| Product | GET /api/products | 8,006 | 265.97 | 253.93 ms | 0.00% | 100.00% |
+| Product | GET /api/products/{id} | 10,996 | 361.71 | 114.28 ms | 0.00% | 100.00% |
+| Customer | GET /api/customers | 12,914 | 429.07 | 56.09 ms | 0.00% | 100.00% |
+| Customer | GET /api/customers/{id} | 12,524 | 412.47 | 68.37 ms | 0.00% | 100.00% |
+| Order | GET /api/orders/customer/{id} | 10,808 | 356.16 | 130.63 ms | 0.00% | 100.00% |
+| Order | POST /api/orders | 8,394 | 273.93 | 195.91 ms | 0.00% | 100.00% |
+| Order | POST /api/orders/{id}/items | 8,980 | 296.04 | 276.74 ms | 0.00% | 100.00% |
+| Order | POST /api/orders/{id}/pay | 10,229 | 334.55 | 241.67 ms | 0.00% | 100.00% |
+| Payment | POST /api/payments | 11,684 | 383.84 | 211.55 ms | 0.00% | 100.00% |
+| Redis | GET /api/recommendations/customers/{id} | 6,447 | 211.99 | 359.33 ms | 0.00% | 100.00% |
+| Redis | POST /api/recommendations/.../views | 11,342 | 374.44 | 107.17 ms | 0.00% | 100.00% |
+| Checkout | order + item + payment | 10,043 | 325.90 | 254.99 ms | 0.00% | 100.00% |
 
-## 🎯 Regras de Negócio Implementadas
+Login p95 is dominated by **bcrypt** on `boundedElastic` (same cost as MVC; fewer concurrent hashes → lower RPS under WebFlux’s smaller thread budget).
 
-### Order (Aggregate Root)
-- ✅ Só pode ir de `PENDING` → `PAID`
-- ✅ Nunca pode ir de `CANCELLED` → `PAID`
-- ✅ Pedido pago não pode ser cancelado
+---
 
-### Product
-- ✅ Validação de estoque antes de reduzir
-- ✅ Produto deve estar ativo e com estoque para estar disponível
+## Comparison: Sync → CompletableFuture → WebFlux
 
-### Payment
-- ✅ Só pode aprovar pagamentos `PENDING`
+Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](https://github.com/noellepaes/java-ecommerce-completable-future) (same k6 shape: 50 VUs · 30s).  
+**WebFlux** column = this run (`suite-20260720-095710`).
 
-## 🛠️ Tecnologias
+| Endpoint | Sync p95 | CF p95 | WebFlux p95 | Notes |
+|----------|----------|--------|-------------|--------|
+| POST /api/recommendations/.../views | 4.85 ms | **3.56 ms (−27%)** | 107.17 ms | CF overlaps Redis writes; WebFlux still non-blocking but R2DBC/Redis + Docker Desktop add overhead vs that baseline host |
+| GET /api/recommendations/customers/{id} | 4.52 ms | 8.58 ms (+90%) | 359.33 ms | Fan-out / hydration cost; CF already slower than sync on small seed |
+| GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s | Parallel customer lookups; WebFlux pays reactive pipeline + R2DBC |
+| GET /api/products | 3.41 ms | — | 253.93 ms | Simple read: MVC/JPA was already very fast |
+| GET /api/customers/{id} | 3.23 ms | — | 68.37 ms | Best WebFlux CRUD p95 in this suite |
+| POST /api/auth/login | 470.31 ms | — | 10.84 s | bcrypt-bound; WebFlux limits parallel CPU-bound hashes |
+| Threads under ~50 VU load | Tomcat pool (often ≫ 100) | Tomcat + executor | **peak ≈ 89** | Clearest WebFlux advantage |
 
-- Java 21
-- Spring Boot 3.2.0
-- Spring Data JPA
-- PostgreSQL 15
-- Flyway (migrations)
-- Lombok
-- Maven (multi-módulo)
+### How to read the comparison
 
-## 📝 Próximos Passos
+1. **Threads ↓** — WebFlux is the winner: ~**89 peak** vs a blocking Tomcat model that grows with concurrency.
+2. **Latency** — On this machine (Docker Desktop / Windows), absolute WebFlux p95 for simple CRUD did **not** beat the published Sync/CF numbers from the sibling study. Reactive stacks shine when you need **many concurrent connections with little memory/threads**, not when each request is a single tiny SQL round-trip already < 5 ms on JPA.
+3. **CF vs WebFlux** — CF improves *selected* parallel I/O paths inside MVC. WebFlux changes the **server concurrency model** for every endpoint.
 
-1. ✅ Estrutura multi-módulo
-2. ✅ Schemas separados
-3. ✅ Flyway como fonte única
-4. ⏳ Implementar eventos de domínio
-5. ⏳ Migrar para WebFlux (não bloqueante)
-6. ⏳ Extrair para microsserviços
+---
 
-## 📚 Documentação
+## What changed vs MVC/JPA
 
-- `docs/ARQUITETURA.md` - Explicação detalhada da arquitetura
-- `docs/COMUNICACAO_MODULOS.md` - Como os módulos se comunicam
-- `docs/GUIA_RAPIDO.md` - Guia rápido de testes
-- `MIGRACAO_ESTRUTURA.md` - Guia para migrar arquivos para a nova estrutura
+| Layer | Before (MVC study) | This repo |
+|-------|--------------------|-----------|
+| HTTP | Spring MVC / Tomcat | **WebFlux / Netty** |
+| Persistence | Spring Data JPA | **Spring Data R2DBC** + adapters |
+| Redis | `StringRedisTemplate` | **`ReactiveStringRedisTemplate`** |
+| API returns | `T` / `List` / `ResponseEntity` | **`Mono` / `Flux`** |
+| Flyway | JDBC | JDBC (unchanged; required) |
+
+Order aggregate: `OrderRepositoryAdapter` loads/saves `order_items` reactively (no JPA cascade).
+
+---
+
+## Extra docs
+
+- `docs/ARQUITETURA.md`
+- `docs/DECISOES_ARQUITETURAIS.md`
+- `docs/GUIA_RAPIDO.md`

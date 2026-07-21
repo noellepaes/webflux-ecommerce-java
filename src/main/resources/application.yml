@@ -6,6 +6,11 @@ spring:
     url: r2dbc:postgresql://localhost:5432/ecommerce
     username: ecommerce
     password: ecommerce
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 50
+      max-idle-time: 30m
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ecommerce

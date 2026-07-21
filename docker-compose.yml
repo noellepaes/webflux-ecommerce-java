@@ -30,6 +30,8 @@ services:
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/ecommerce
       SPRING_R2DBC_USERNAME: ecommerce
       SPRING_R2DBC_PASSWORD: ecommerce
+      SPRING_R2DBC_POOL_INITIAL_SIZE: "10"
+      SPRING_R2DBC_POOL_MAX_SIZE: "50"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecommerce
       SPRING_DATASOURCE_USERNAME: ecommerce
       SPRING_DATASOURCE_PASSWORD: ecommerce
