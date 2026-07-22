@@ -17,15 +17,19 @@ public class CreateProductUseCase {
 
     @Transactional
     public Mono<ProductDTO> execute(ProductDTO productDTO) {
-        return repository.findByName(productDTO.name())
-                .flatMap(existing -> Mono.<ProductDTO>error(new BusinessException("Produto com este nome já existe")))
-                .switchIfEmpty(Mono.defer(() -> {
+        return repository.findAll()
+                .filter(p -> p.getName().equals(productDTO.name()))
+                .hasElements()
+                .flatMap(exists -> {
+                    if (exists) {
+                        return Mono.error(new BusinessException("Produto com este nome já existe"));
+                    }
                     Product product = new Product();
                     product.setName(productDTO.name());
                     product.setDescription(productDTO.description());
                     product.setPrice(productDTO.price());
                     product.setStock(productDTO.stock());
                     return repository.save(product).map(ProductDTO::from);
-                }));
+                });
     }
 }

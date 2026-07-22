@@ -6,6 +6,7 @@ import com.ecommerce.customer.application.usecase.CreateCustomerUseCase;
 import com.ecommerce.customer.domain.repository.CustomerRepository;
 import com.ecommerce.product.application.dto.ProductDTO;
 import com.ecommerce.product.application.usecase.CreateProductUseCase;
+import com.ecommerce.product.domain.model.Product;
 import com.ecommerce.product.infrastructure.repository.ProductRepository;
 import com.ecommerce.recommendation.infrastructure.ProductViewGraphRedisStore;
 import lombok.RequiredArgsConstructor;
@@ -104,19 +105,13 @@ public class DevSeedData implements CommandLineRunner {
                         customerRepository.findByEmail(NOELLE_EMAIL).map(CustomerDTO::from),
                         customerRepository.findByEmail(DANIEL_EMAIL).map(CustomerDTO::from)
                 )
-                .flatMap(customers -> Mono.zip(
-                                productRepository.findByName(TENIS_NAME).map(ProductDTO::from),
-                                productRepository.findByName(BOLA_NAME).map(ProductDTO::from),
-                                productRepository.findByName(CAMISA_NAME).map(ProductDTO::from),
-                                productRepository.findByName(NOTEBOOK_NAME).map(ProductDTO::from),
-                                productRepository.findByName(MOUSE_NAME).map(ProductDTO::from),
-                                productRepository.findByName(TECLADO_NAME).map(ProductDTO::from),
-                                productRepository.findByName(HEADSET_NAME).map(ProductDTO::from)
-                        )
-                        .map(products -> new SeedEntities(
+                .flatMap(customers -> productRepository.findAll()
+                        .collectMap(Product::getName, ProductDTO::from)
+                        .map(byName -> new SeedEntities(
                                 customers.getT1(), customers.getT2(), customers.getT3(),
-                                products.getT1(), products.getT2(), products.getT3(),
-                                products.getT4(), products.getT5(), products.getT6(), products.getT7())));
+                                byName.get(TENIS_NAME), byName.get(BOLA_NAME), byName.get(CAMISA_NAME),
+                                byName.get(NOTEBOOK_NAME), byName.get(MOUSE_NAME), byName.get(TECLADO_NAME),
+                                byName.get(HEADSET_NAME))));
     }
 
     private Mono<Void> seedRedisViews(SeedEntities seed) {

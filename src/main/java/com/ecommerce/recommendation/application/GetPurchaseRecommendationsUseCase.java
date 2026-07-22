@@ -11,22 +11,17 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Recomendações colaborativas.
- * Hidratação Postgres em batch ({@code findByIdIn}) — equivalente reativo a EntityGraph/IN,
- * em vez de {@code concatMap(findById)} por candidato.
+ * Hidratação via {@code findById} no service (repositório só {@code ReactiveCrudRepository}).
  */
 @Service
 @RequiredArgsConstructor
@@ -71,7 +66,6 @@ public class GetPurchaseRecommendationsUseCase {
         if (rankedIds.isEmpty() || limit <= 0) {
             return Flux.empty();
         }
-        // Pega um buffer maior que o limit (produtos inativos/filtrados) e filtra em 1 query IN
         List<UUID> candidates = rankedIds.stream()
                 .filter(id -> !exclude.contains(id))
                 .limit(Math.max(limit * 3L, limit))
@@ -80,23 +74,12 @@ public class GetPurchaseRecommendationsUseCase {
             return Flux.empty();
         }
 
-        return productRepository.findByIdIn(candidates)
-                .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
-                .filter(Product::isAvailable)
-                .collect(Collectors.toMap(Product::getId, Function.identity(), (a, b) -> a, LinkedHashMap::new))
-                .flatMapMany(byId -> {
-                    List<ProductDTO> ordered = new ArrayList<>();
-                    for (UUID id : candidates) {
-                        Product product = byId.get(id);
-                        if (product != null) {
-                            ordered.add(ProductDTO.from(product));
-                            if (ordered.size() >= limit) {
-                                break;
-                            }
-                        }
-                    }
-                    return Flux.fromIterable(ordered);
-                });
+        return Flux.fromIterable(candidates)
+                .concatMap(id -> productRepository.findById(id)
+                        .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
+                        .filter(Product::isAvailable)
+                        .map(ProductDTO::from))
+                .take(limit);
     }
 
     private Mono<Map<UUID, Integer>> collaborativeScores(UUID customerId, Set<UUID> userViews) {
@@ -121,7 +104,8 @@ public class GetPurchaseRecommendationsUseCase {
         if (need <= 0) {
             return Flux.empty();
         }
-        return productRepository.findByStatus(ProductStatus.ACTIVE)
+        return productRepository.findAll()
+                .filter(p -> p.getStatus() == ProductStatus.ACTIVE)
                 .filter(Product::isAvailable)
                 .filter(p -> !excludeIds.contains(p.getId()))
                 .take(need)
