@@ -6,7 +6,7 @@ import com.ecommerce.customer.application.usecase.CreateCustomerUseCase;
 import com.ecommerce.customer.domain.repository.CustomerRepository;
 import com.ecommerce.product.application.dto.ProductDTO;
 import com.ecommerce.product.application.usecase.CreateProductUseCase;
-import com.ecommerce.product.domain.repository.ProductRepository;
+import com.ecommerce.product.infrastructure.repository.ProductRepository;
 import com.ecommerce.recommendation.infrastructure.ProductViewGraphRedisStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

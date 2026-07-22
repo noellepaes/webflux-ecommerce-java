@@ -2,7 +2,7 @@ package com.ecommerce.product.application.usecase;
 
 import com.ecommerce.product.application.dto.ProductDTO;
 import com.ecommerce.product.domain.model.Product;
-import com.ecommerce.product.domain.repository.ProductRepository;
+import com.ecommerce.product.infrastructure.repository.ProductRepository;
 import com.ecommerce.shared.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

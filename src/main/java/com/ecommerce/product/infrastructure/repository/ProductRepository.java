@@ -10,9 +10,16 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * Repositório R2DBC direto (estilo artigo): sem adapter / porta de domínio.
+ * {@code findBy*} são queries derivadas do Spring Data — sem overrides manuais.
+ */
 @Repository
-public interface R2dbcProductRepository extends ReactiveCrudRepository<Product, UUID> {
+public interface ProductRepository extends ReactiveCrudRepository<Product, UUID> {
+
     Mono<Product> findByName(String name);
+
     Flux<Product> findByStatus(ProductStatus status);
+
     Flux<Product> findByIdIn(Collection<UUID> ids);
 }

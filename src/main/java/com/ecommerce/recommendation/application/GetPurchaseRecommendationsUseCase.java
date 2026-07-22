@@ -3,7 +3,7 @@ package com.ecommerce.recommendation.application;
 import com.ecommerce.product.application.dto.ProductDTO;
 import com.ecommerce.product.domain.model.Product;
 import com.ecommerce.product.domain.model.ProductStatus;
-import com.ecommerce.product.domain.repository.ProductRepository;
+import com.ecommerce.product.infrastructure.repository.ProductRepository;
 import com.ecommerce.recommendation.config.RecommendationProperties;
 import com.ecommerce.recommendation.infrastructure.ProductViewGraphRedisStore;
 import lombok.RequiredArgsConstructor;
