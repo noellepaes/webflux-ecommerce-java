@@ -118,35 +118,25 @@ Results kept as **compact summaries** under `load-tests/results/` (full k6 dumps
 
 ---
 
-## Product reads — 3 mudanças cirúrgicas (artigo WebFlux)
+## Product reads (WebFlux)
 
-Aplicadas em `GET /api/products` e `GET /api/products/{id}` (auth ignorado por enquanto).
+`GET /api/products` e `GET /api/products/{id}` ficam no `ProductController` (`@GetMapping`), com `GetProductUseCase` em R2DBC **sem** `@Transactional` no read.
 
-| # | Mudança | Onde |
-|---|---------|------|
-| 1 | **RouterFunction + Handler** (sem `@GetMapping` no hot path) | `ProductRouterConfig` + `ProductReadHandler` |
-| 2 | **R2DBC sem `@Transactional` no read** (não segura conexão do pool na cadeia) | `GetProductUseCase` |
-| 3 | **Stream do `Flux` + `limitRate(256)`** (contrapressão; JSON array, k6 compatível) | `ProductReadHandler.list` |
+Writes (`POST`/`PUT`/`decrease-stock`) também no mesmo controller.
 
-Writes (`POST`/`PUT`/`decrease-stock`) continuam em `ProductController`.
+### Benchmark products (50 VUs · 30s · pause 0.1 · Docker Compose · app quente · 2026-07-22)
 
-### Benchmark products (50 VUs · pause 0.1 · Docker Compose · app quente)
+Relatório: `load-tests/results/products-warm-20260722-102827.txt`
 
-| Endpoint | Antes (`suite-20260720`) | Depois (2026-07-21) | Delta |
-|----------|--------------------------|---------------------|-------|
-| `GET /api/products` | p95 **253.93 ms** · RPS 266 | p95 **147.53 ms** · RPS **306** | **−42% p95** · +15% RPS |
-| `GET /api/products/{id}` | p95 **114.28 ms** · RPS 362 | p95 **54.66 ms** · RPS **416** | **−52% p95** · +15% RPS |
+| Endpoint | Reqs | RPS | p95 | Avg | Fail |
+|----------|------|-----|-----|-----|------|
+| `GET /api/products` | 13 722 | **456** | **22.96 ms** | 8.19 ms | 0% |
+| `GET /api/products/{id}` | 12 663 | **420** | **48.07 ms** | 16.11 ms | 0% |
 
-1 VU (latência absoluta neste host): list ~12 ms avg / by-id ~6 ms avg — ainda acima do Sync JPA (~3 ms), mas bem mais perto.
+(Comparação antiga RouterFunction 2026-07-21: list p95 147 ms / by-id 55 ms — este run no `@RestController` quente ficou bem melhor neste host.)
 
 ```
-Cliente
-  |
-  v
-[Netty event-loop]
-  |
-  v
-RouterFunction --> ProductReadHandler --> GetProductUseCase --> R2DBC (Flux/Mono)
+Cliente → Netty → ProductController → GetProductUseCase → R2DBC (Flux/Mono)
 ```
 
 ---
@@ -168,7 +158,7 @@ BEFORE = `89f1807` (N+1 / `concatMap`) · AFTER = `856b3a7` (batch).
 
 Conclusão: com **volume realista de pedidos**, o batch `IN` melhora muito. Em recomendações (grafo seed pequeno) o ganho é moderado; o ganho grande aparece no fan-out denso / hidratação SQL.
 
-Arquivos: `OrderRepositoryAdapter.attachItemsBatch`, `GetPurchaseRecommendationsUseCase`, `RecommendationRouterConfig` / `RecommendationReadHandler`, `ProductViewGraphRedisStore.recordView` (`Mono.zip`).
+Arquivos: `GetOrderUseCase` (batch `findByOrderIdIn`), `GetPurchaseRecommendationsUseCase`, `RecommendationRouterConfig` / `RecommendationReadHandler`, `ProductViewGraphRedisStore.recordView` (`Mono.zip`).
 
 ---
 
@@ -234,8 +224,8 @@ p95 = 95th percentile of `http_req_duration`.
 | Module | Endpoint | Reqs | RPS | p95 | Failures | Checks |
 |--------|----------|------|-----|-----|----------|--------|
 | Auth | GET /api/auth/users | 2,559 | 83.86 | 1.02 s | 0.00% | 100.00% |
-| Product | GET /api/products | — | **306** | **147.53 ms** | 0.00% | 100.00% |
-| Product | GET /api/products/{id} | — | **416** | **54.66 ms** | 0.00% | 100.00% |
+| Product | GET /api/products | 13,722 | **456** | **22.96 ms** | 0.00% | 100.00% |
+| Product | GET /api/products/{id} | 12,663 | **420** | **48.07 ms** | 0.00% | 100.00% |
 | Customer | GET /api/customers | 12,914 | 429.07 | 56.09 ms | 0.00% | 100.00% |
 | Customer | GET /api/customers/{id} | 12,524 | 412.47 | 68.37 ms | 0.00% | 100.00% |
 | Order | GET /api/orders/customer/{id} | — | **109** | **933 ms** | 0.00% | 100.00% |
@@ -262,8 +252,8 @@ Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](
 | POST /api/recommendations/.../views | 4.85 ms | **3.56 ms (−27%)** | 107.17 ms | CF overlaps Redis writes; WebFlux: `Mono.zip` nos SADDs |
 | GET /api/recommendations/customers/{id} | 4.52 ms | 8.58 ms (+90%) | **523 ms** | A/B limpo: antes N+1/concatMap **614 ms** (−15%) |
 | GET /api/auth/users | 5.01 ms | 5.87 ms | 1.02 s* | *Antes: N+1. Agora: query com JOIN (login adiado). |
-| GET /api/products | 3.41 ms | — | **147.53 ms** (−42% vs WebFlux antigo 254 ms) | RouterFunction + R2DBC sem tx + stream/`limitRate` |
-| GET /api/products/{id} | 3.38 ms | — | **54.66 ms** (−52% vs WebFlux antigo 114 ms) | Mesmo caminho funcional |
+| GET /api/products | 3.41 ms | — | **22.96 ms** | k6 **50 VUs · 30s · pause 0.1** · 13 722 reqs · **456 RPS** · fail 0% (`products-warm-20260722-102827`) |
+| GET /api/products/{id} | 3.38 ms | — | **48.07 ms** | mesma carga · 12 663 reqs · **420 RPS** · fail 0% |
 | GET /api/orders/customer/{id} | — | EntityGraph (estudo JPA) | **933 ms** | A/B limpo 30 pedidos: antes N+1 **3.77 s** (∼4×) |
 | GET /api/customers/{id} | 3.23 ms | — | 68.37 ms | Best WebFlux CRUD p95 in this suite |
 | Threads under ~50 VU load | Tomcat pool (often ≫ 100) | Tomcat + executor | **peak ≈ 89** | Clearest WebFlux advantage |
@@ -289,7 +279,7 @@ Baselines for **Sync** and **CF** come from [java-ecommerce-completable-future](
 | API returns | `T` / `List` / `ResponseEntity` | **`Mono` / `Flux`** |
 | Flyway | JDBC | JDBC (unchanged; required) |
 
-Order aggregate: `OrderRepositoryAdapter` loads/saves `order_items` reactively (no JPA cascade).
+Order aggregate: `OrderRepository` + `OrderItemRepository` (R2DBC); montagem dos itens no UseCase (sem cascade JPA).
 
 ---
 

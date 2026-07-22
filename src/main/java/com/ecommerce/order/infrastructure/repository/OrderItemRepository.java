@@ -9,9 +9,8 @@ import java.util.Collection;
 import java.util.UUID;
 
 @Repository
-public interface R2dbcOrderItemRepository extends ReactiveCrudRepository<OrderItem, UUID> {
+public interface OrderItemRepository extends ReactiveCrudRepository<OrderItem, UUID> {
     Flux<OrderItem> findByOrderId(UUID orderId);
 
-    /** Equivalente reativo do EntityGraph/batch: 1 query para N pedidos. */
     Flux<OrderItem> findByOrderIdIn(Collection<UUID> orderIds);
 }

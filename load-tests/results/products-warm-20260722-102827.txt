@@ -1,0 +1,2 @@
+GET /api/products	reqs=13722	rps=455.911547	p95=22.96ms	avg=8.19ms	fail=0.00%	VUs=50	duration=30s	pause=0.1
+GET /api/products/{id}	reqs=12663	rps=420.312255	p95=48.07ms	avg=16.11ms	fail=0.00%	VUs=50	duration=30s	pause=0.1

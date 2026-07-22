@@ -10,10 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-/**
- * Reads reativos (R2DBC). Sem {@code @Transactional}: evita segurar conexão
- * do pool durante toda a cadeia do Flux — ponto 2 do artigo.
- */
+/** Reads reativos (R2DBC). Sem {@code @Transactional} no Flux/Mono de leitura. */
 @Service
 @RequiredArgsConstructor
 public class GetProductUseCase {

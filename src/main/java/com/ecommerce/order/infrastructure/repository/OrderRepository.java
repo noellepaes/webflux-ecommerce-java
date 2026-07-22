@@ -8,6 +8,6 @@ import reactor.core.publisher.Flux;
 import java.util.UUID;
 
 @Repository
-public interface R2dbcOrderEntityRepository extends ReactiveCrudRepository<Order, UUID> {
+public interface OrderRepository extends ReactiveCrudRepository<Order, UUID> {
     Flux<Order> findByCustomerId(UUID customerId);
 }

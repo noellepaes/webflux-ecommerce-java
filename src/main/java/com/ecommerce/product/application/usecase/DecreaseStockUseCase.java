@@ -20,10 +20,11 @@ public class DecreaseStockUseCase {
     public Mono<ProductDTO> execute(UUID id, Integer quantity) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new BusinessException("Produto não encontrado")))
-                .flatMap(product -> {
+                .map(product -> {
                     product.decreaseStock(quantity);
-                    return repository.save(product);
+                    return product;
                 })
+                .flatMap(repository::save)
                 .map(ProductDTO::from);
     }
 }

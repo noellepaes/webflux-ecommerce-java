@@ -18,18 +18,21 @@ public class CreateProductUseCase {
     @Transactional
     public Mono<ProductDTO> execute(ProductDTO productDTO) {
         return repository.findAll()
-                .filter(p -> p.getName().equals(productDTO.name()))
-                .hasElements()
-                .flatMap(exists -> {
-                    if (exists) {
-                        return Mono.error(new BusinessException("Produto com este nome já existe"));
-                    }
-                    Product product = new Product();
-                    product.setName(productDTO.name());
-                    product.setDescription(productDTO.description());
-                    product.setPrice(productDTO.price());
-                    product.setStock(productDTO.stock());
-                    return repository.save(product).map(ProductDTO::from);
-                });
+                .any(p -> p.getName().equals(productDTO.name()))
+                .flatMap(exists -> Boolean.TRUE.equals(exists)
+                        ? Mono.error(new BusinessException("Produto com este nome já existe"))
+                        : Mono.just(productDTO))
+                .map(CreateProductUseCase::toEntity)
+                .flatMap(repository::save)
+                .map(ProductDTO::from);
+    }
+
+    private static Product toEntity(ProductDTO dto) {
+        Product product = new Product();
+        product.setName(dto.name());
+        product.setDescription(dto.description());
+        product.setPrice(dto.price());
+        product.setStock(dto.stock());
+        return product;
     }
 }
