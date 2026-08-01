@@ -33,7 +33,7 @@ jobs:
           scanners: "vulnerability"
 
       - name: Upload results to Security tab
-        uses: github/codeql-action/upload-sarif@e2b4f0d4c27344f6bd09bf28f22e755f8ea5c2b7
+        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848fd6145a44e8a539
         if: always()
         with:
           sarif_file: "trivy-results.sarif"
