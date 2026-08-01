@@ -5,7 +5,6 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,14 +13,13 @@ permissions:
 jobs:
   sca-scan:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
 
       - name: Run Trivy SCA
         id: trivy_scan
-        uses: aquasecurity/trivy-action@d43c83b2b1ef7f7a6a7b22f542f5fd58b9ba600d
-        continue-on-error: true
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -32,7 +30,7 @@ jobs:
           ignore-unfixed: true
           scanners: "vulnerability"
 
-      - name: Upload results to Security tab
+      - name: Upload SARIF to Security tab
         uses: github/codeql-action/upload-sarif@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0
         if: always()
         with:
