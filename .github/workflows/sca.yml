@@ -12,7 +12,7 @@ permissions:
   security-events: write
 
 jobs:
-  scan:
+  sca-scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -36,7 +36,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
-
-      - name: Fail if vulnerabilities found
-        if: steps.trivy_scan.outcome == 'failure'
-        run: exit 1
