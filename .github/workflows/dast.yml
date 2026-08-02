@@ -40,6 +40,7 @@ jobs:
         uses: zaproxy/action-baseline@6c5a007541891231cd9e0ddec25d4f25c59c9874
         with:
           target: "http://localhost:8080"
+          allow_issue_writing: false
 
       - name: Upload SARIF to Security tab
         if: always() && hashFiles('zap-results.sarif') != ''
