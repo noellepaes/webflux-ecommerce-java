@@ -40,9 +40,9 @@ jobs:
       - name: Configure ZAP Rules
         run: |
           cat > rules.tsv << 'EOF'
-          90022	IGNORE
-          10023	IGNORE
-          10049	IGNORE
+          90022	IGNORE	0
+          10023	IGNORE	0
+          10049	IGNORE	0
           EOF
 
       - name: ZAP Baseline Scan
