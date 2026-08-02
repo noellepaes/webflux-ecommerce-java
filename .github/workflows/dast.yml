@@ -1,0 +1,53 @@
+name: "DAST Scan"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  dast-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+
+      - name: Start application
+        run: docker compose up -d
+
+      - name: Wait for application
+        run: |
+          for i in {1..30}; do
+            if docker compose ps --status running | grep -q app; then
+              echo "Application is running!"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Application failed to start"
+          docker compose ps
+          docker compose logs --no-color
+          exit 1
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@6c5a007541891231cd9e0ddec25d4f25c59c9874
+        with:
+          target: "http://localhost:8080"
+          allow_issue_writing: false
+
+      - name: Upload SARIF to Security tab
+        if: always() && hashFiles('zap-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@9e8d0789d4a0fa9ceb6b1738f7e269594bdd67f0
+        with:
+          sarif_file: zap-results.sarif
+
+      - name: Stop application
+        if: always()
+        run: docker compose down
