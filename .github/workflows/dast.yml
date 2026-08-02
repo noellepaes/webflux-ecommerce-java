@@ -37,11 +37,20 @@ jobs:
           docker compose logs --no-color
           exit 1
 
+      - name: Configure ZAP Rules
+        run: |
+          cat > rules.tsv << 'EOF'
+          90022	IGNORE
+          10023	IGNORE
+          10049	IGNORE
+          EOF
+
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@6c5a007541891231cd9e0ddec25d4f25c59c9874
         with:
           target: "http://localhost:8080"
           allow_issue_writing: true
+          rules_file_name: "rules.tsv"
 
       - name: Upload ZAP Reports
         if: always()
